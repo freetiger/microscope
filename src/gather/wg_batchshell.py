@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import os
 import getopt
-import os.path
-import MySQLdb
-import configure
-import datetime
 from grabber import Grabber
 
 help_text="""Usage: python wg_batchshell.py [options]
@@ -21,9 +16,6 @@ Examples:
 def print_help():
     print >>sys.stderr, help_text
     sys.exit(1)
-
-def getConnect():
-    return MySQLdb.connect(host=configure.db_mysql_host,port=configure.db_mysql_port,db=configure.db_mysql_db,user=configure.db_mysql_user,passwd=configure.db_mysql_passwd)
 
 def main(args):
    
@@ -40,9 +32,9 @@ def main(args):
             try:
                 batch_id=int(arg)
             except:
-                print_error("batchid must be integer.")
+                print "batchid must be integer."
             if batch_id<0:
-                print_error("batchid must be larger than zero.")
+                print "batchid must be larger than zero."
     
     conn = getConnect()
     cur=conn.cursor()

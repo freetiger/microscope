@@ -5,23 +5,33 @@ Created on 2014年10月20日
 @author: hyx
 '''
 from django.contrib import admin
-from gather.job.models import Job,Scan
+from gather.job.models import Job,Scan,ScanResult
 
 class ScanInline(admin.TabularInline):    #StackedInline
     model = Scan
+    extra = 0
 
 class JobAdmin(admin.ModelAdmin):
     # ...
-    list_display = ('job_name', 'job_flag', 'get_rules', 'searchwords', 'searchbase', 'create_date')
+    list_display = ('job_name', 'get_rules', 'keyword', 'thread_num', 'create_date')
     #
     list_filter = ['create_date']
     search_fields = ['job_name']
     date_hierarchy = 'create_date'
-    #
-    fieldsets = [
-        (None,               {'fields': ['question']}),
-        ('Date information', {'fields': ['create_date'], 'classes': ['collapse']}),
-    ]
     inlines = [ScanInline]
     
+class ScanResultInline(admin.TabularInline):    #StackedInline
+    model = ScanResult
+    extra = 0
+    
+class ScanAdmin(admin.ModelAdmin):
+    # ...
+    #list_display = ('job_name', 'get_rules', 'keyword', 'thread_num', 'create_date')
+    #
+#     list_filter = ['create_date']
+#     search_fields = ['job_name']
+#     date_hierarchy = 'create_date'
+    inlines = [ScanResultInline]
+    
 admin.site.register(Job, JobAdmin)
+admin.site.register(Scan, ScanAdmin)

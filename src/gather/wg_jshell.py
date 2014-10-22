@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-import sys
-import os
 import getopt
-import os.path
+import sys
+
+import django
+
 from grabber import Grabber
+
+
 help_text="""Usage: python wg_jshell.py [options]
 
 Options:
@@ -36,15 +39,17 @@ def main(args):
             try:
                 job_id=int(arg)
             except:
-                print_error("jobid must be interger")
+                print "jobid must be interger"
         elif opt in ("-n", "--keyword"):
             keyword = arg
             #.replace("-","%")   
     the_grabber = Grabber()
-    the_grabber.startscan(job_id,keyword)
+    thread_num=1
+    the_grabber.startscan(job_id,keyword, thread_num)
     
    
 
 if __name__ == '__main__':    
+    django.setup()
     main(sys.argv[1:])
 
