@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from Queue import Queue
-import re
-import threading
-import urllib2, cookielib
-
+import urllib,urllib2,cookielib
+import re,datetime
 import stdb
-from gather.job.models import ScanResult
-
+import pickle
+import threading
+from Queue import Queue
+import configure
 
 default_jobsetting = {"html_encoding":"GBK","parse_encoding":"utf-8"}
 jobpath = []
@@ -58,7 +57,7 @@ def masktoblank(instr):
     normalTagreg =re.compile("(<\s*(?:span|a|font|p|h|h1|h2|h3|)?[^>]*>)")
     tags = normalTagreg.findall(instr)
     for tagstr in tags:
-        instr = instr.replace(tagstr,"")
+        instr = instr.replace("tagstr","")
         
     return instr
 
@@ -72,7 +71,7 @@ def getUrlContent(inUrl,postdata=None):
     urllib2.install_opener(opener)
         
     if len(inUrl)==0:
-        #print "get blank url"
+     #   print "get blank url"
         return ""
     inUrl = urlzhuanyi(inUrl)
     #print "call getUrlContent"
@@ -124,10 +123,20 @@ def getUrlContent(inUrl,postdata=None):
                 print "request time out",tpnum
                 htmlsrc = ""
                 tpnum = tpnum - 1
+                
+            #s.close()
+            
+            #page = urllib2.urlopen(inUrl)
+            #print "request done"
+          
+                
         except urllib2.URLError,err:
             print "error getUrlContent"
             print err
             return None
+      
+        #print "done getUrlContent"
+        
     return htmlsrc
 
 #移除html标签，特别的：br标签替换成一个空格
@@ -292,7 +301,11 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
                 items[regexps["str"]] = scroll_str
                 rtv.append(items)
 
+   
     return rtv
+
+
+
 
 #占位符替换为实际值：in_url中包含占位符${}，runtime_status中存储了占位符的实际值
 def urlinsocket(in_url,runtime_status):
@@ -304,12 +317,22 @@ def urlinsocket(in_url,runtime_status):
             print "can't find "+items+" in runtime status when urlinsocket"
             return ""
         in_url = in_url.replace('${'+items+'}',str(runtime_status[items]))
+        
+    #if in_url in self.urlCheckedList:
+    #    if "reCheck" not in runtime_status or runtime_status["reCheck"] =="0":
+    #        in_url =""
+    #else:
+    #    self.urlCheckedList[in_url] = "1"
+    #if "reCheck" in runtime_status:
+    #    print runtime_status["reCheck"]
+          
+    #print "urlinsocket return : "+in_url
     return in_url
     
 
 
     
-class GatherWorker(threading.Thread):
+class GWorker(threading.Thread):
     
     def __init__(self, threadname, jobpath, queue,output_queue):
         
@@ -420,6 +443,10 @@ class GatherWorker(threading.Thread):
                 else:
                     print "status error "+str(tmp_status)
             #start page loop
+
+                
+        
+
         #needLoop等于一时处理循环抓取的情况，可以按照loopUrl抓取下一页，还可以设置分页步进长度，分页数目
         hasNext = True
         lastUrl = ""
@@ -475,24 +502,33 @@ class GatherWorker(threading.Thread):
         return
 
 #将结果output_queue输出的最终的txt文件中
-class OutputScanResult(threading.Thread):
+class DBWorker(threading.Thread):
     
-    def __init__(self, threadname, scan_id, output_queue):
+    def __init__(self, threadname, jobid, scanid, output_queue):
         
         threading.Thread.__init__(self, name = threadname)
-        self.scan_id = scan_id
-        self.sharedata = output_queue
+        self.sharedata = output_queue        
+        self.jobid = jobid
+        self.scanid = scanid
+        self.outputfile = None
 
     def run(self):
 
         print self.getName(),'Started'        
             
         while True:
+            
             items = self.sharedata.get()
-            print items
-            scanResult = ScanResult(scan_id=self.scan_id, scan_result=items)
-            scanResult.save()
-            self.sharedata.task_done()
+            #print items
+            self.outputfile = open(self.getName()+".txt","a")
+            for item in items:
+                self.outputfile.write(item)
+                self.outputfile.write("\t")
+            self.outputfile.write("\n")
+            self.outputfile.close()
+            #corpname = stdb.writeData(self.jobid,self.scanid,items)
+            #self.cg_queue.put(corpname)
+            self.sharedata.task_done()       
         
 #抓取的主程序：在数据库中设置抓取前的任务状态，启动抓取线程，启动输出抓取结果的线程，在数据库中设置抓取任务的状态
 class Grabber(object):
@@ -506,10 +542,9 @@ class Grabber(object):
         self.output_queue = Queue()    #结果输出队列
         self.cgqueue = Queue()
         
-    def startscan(self,job_id,keyword, thread_num):
-        #
+    def startscan(self,job_id,keyword):
+
         self.dbpt.prepareScan(job_id)        
-        #
         org_setting = None
         if keyword is not None:
             print keyword
@@ -526,24 +561,26 @@ class Grabber(object):
         
         runtime_status = {}
         #启动抓取线程，线程处于ready状态
-        for i in range(thread_num):
-            t = GatherWorker("GatherWorker_"+str(i), self.jobpath,self.grbQueue, self.output_queue)
+        for i in range(configure.thread_num):
+            t = GWorker("GWorker_"+str(i), self.jobpath,self.grbQueue, self.output_queue)
             t.setDaemon(True)
             t.start()
         #创建输出最终结果的txt，启动输出结果的线程，线程处于ready状态
         for i in range(0,1):
-            t = OutputScanResult(threadname="OutputScanResult_"+str(self.dbpt.scan_id), scan_id=self.dbpt.scan_id, output_queue=self.output_queue)
+            t = DBWorker("DBWorker_"+str(self.dbpt.scanid), self.dbpt.jobid, self.dbpt.scanid, self.output_queue)
+            tmp_file = open("DBWorker_"+str(self.dbpt.scanid)+".txt","w")
+            tmp_file.close()
             t.setDaemon(True)
             t.start()            
         
         #设置抓取第一步，用第一个正则语句块进行抓取。（广度优先）
-        self.grbQueue.put((0,runtime_status))
+        self.grbQueue.put((0,runtime_status))        
         #等待grbQueue线程队列结束
         self.grbQueue.join()
         #等待output_queue队列结束
         self.output_queue.join()        
         
-        #
+        #self.dbpt.closeConnection()
         self.dbpt.finishscan()
         print "finish"
         
@@ -552,6 +589,10 @@ class Grabber(object):
     
 
 if __name__ == "__main__":   
+
+    #test_grabber = Grabber()
+    #test_grabber.startscan(66)
+
     print "just import it"
     getUrlContent('http://sr.ju690.cn?orderby=new&dismode=discuss&day=7&p=page2')
 
