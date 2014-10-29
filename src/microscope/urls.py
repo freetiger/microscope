@@ -6,5 +6,6 @@ urlpatterns = patterns('',
     # url(r'^$', 'microscope.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
+    url(r'^job/', include('gather.job.urls', namespace="job")),
     url(r'^admin/', include(admin.site.urls)),
 )
