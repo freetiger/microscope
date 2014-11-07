@@ -490,6 +490,7 @@ class OutputScanResult(threading.Thread):
         while True:
             items = self.sharedata.get()
             print items
+            items = items.decode(default_jobsetting["html_encoding"],"ignore").encode('UTF-8',"ignore")
             scanResult = ScanResult(scan_id=self.scan_id, scan_result=items)
             scanResult.save()
             self.sharedata.task_done()
