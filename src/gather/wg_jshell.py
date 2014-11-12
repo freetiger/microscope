@@ -24,15 +24,12 @@ def print_help():
 def main(args):
     
     try:                                
-        opts, args = getopt.getopt(args, "hj:n:", ["help", "jobid=", "keyword="])
+        opts, args = getopt.getopt(args, "hj:n:", ["help", "jobid=", "placeholders="])
     except getopt.GetoptError:
         print_help()
         
     job_id = 421
-    keyword = None
-    
     for opt, arg in opts:
-        
         if opt in ("-h", "--help"):
             print_help()
         elif opt in ("-j", "--jobid"):
@@ -40,12 +37,10 @@ def main(args):
                 job_id=int(arg)
             except:
                 print "jobid must be interger"
-        elif opt in ("-n", "--keyword"):
-            keyword = arg
-            #.replace("-","%")   
     the_grabber = Grabber()
+    placeholders={}
     thread_num=1
-    the_grabber.startscan(job_id,keyword, thread_num)
+    the_grabber.startscan(job_id,placeholders, thread_num)
     
    
 

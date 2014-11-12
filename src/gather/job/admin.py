@@ -13,7 +13,7 @@ class ScanInline(admin.TabularInline):    #StackedInline
 
 class JobAdmin(admin.ModelAdmin):
     # ...
-    list_display = ('job_name', 'get_rules', 'keyword', 'thread_num', 'create_date')
+    list_display = ('job_name', 'get_rules', 'placeholders_tips', 'placeholders', 'thread_num', 'create_date')
     #
     list_filter = ['create_date']
     search_fields = ['job_name']

@@ -88,5 +88,5 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 TEMPLATE_DIRS = (
-    BASE_DIR + "/gather/job/templates/gather/job",
+    BASE_DIR + "/gather/job/templates",
 )

@@ -1,6 +1,6 @@
 1、wg_jshell.py是抓取引擎的起点。解析启动引擎时输入的参数（如jobid）并开始扫描。
 	the_grabber = Grabber()
-    the_grabber.startscan(job_id,keyword)
+    the_grabber.startscan(job_id)
 2、wg_batchshell.py是抓取引擎的成批抓取起点。解析启动引擎时输入的参数（如batchid）并开始扫描。
 3、webgrabber.py是linux系统下简易的抓取引擎启动脚本。启动了wg_jshell.py并输出日志。
 4、jobsetting_manager.py启动设置抓取任务的web服务。启动twisted程序，加载了对客户端具体请求的响应，等待客户端请求。

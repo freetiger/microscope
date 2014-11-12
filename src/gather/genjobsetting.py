@@ -13,6 +13,7 @@ jobpath.append({
        "getblocks":{"start_str":'<html>',"end_str":'</html>',"cnt_str":"comblock"},
        "encoding":"UTF-8",
        "needLoop":"1",
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
        "loopUrl":["${nextPageUrl1}",],
        "job_description":"科学松鼠会-原创列表"
     })

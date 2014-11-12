@@ -10,6 +10,8 @@ from gather.job import views
 urlpatterns = patterns('',
     # ex: /polls/
     url(r'^$', views.index, name='index'),
+    # ex: /polls/5/results/
+    url(r'^run_job_form/(?P<job_id>\d+)/$', views.runJobForm, name='run_job_form'),
     # ex: /polls/5/
     url(r'^(?P<job_id>\d+)/$', views.detail, name='detail'),
     # ex: /polls/5/results/
