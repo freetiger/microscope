@@ -13,11 +13,12 @@ class ScanInline(admin.TabularInline):    #StackedInline
 
 class JobAdmin(admin.ModelAdmin):
     # ...
-    list_display = ('job_name', 'get_rules', 'keyword', 'thread_num', 'create_date')
+    list_display = ('job_name', 'get_rules', 'placeholders_tips', 'placeholders', 'thread_num', 'create_date')
     #
     list_filter = ['create_date']
     search_fields = ['job_name']
-    date_hierarchy = 'create_date'
+    ordering = ('-create_date',)
+    list_per_page = 10
     inlines = [ScanInline]
     
 class ScanResultInline(admin.TabularInline):    #StackedInline
@@ -25,13 +26,21 @@ class ScanResultInline(admin.TabularInline):    #StackedInline
     extra = 0
     
 class ScanAdmin(admin.ModelAdmin):
-    # ...
-    #list_display = ('job_name', 'get_rules', 'keyword', 'thread_num', 'create_date')
+    list_display = ('job', 'scan_start', 'scan_end', 'is_finish')
     #
-#     list_filter = ['create_date']
-#     search_fields = ['job_name']
-#     date_hierarchy = 'create_date'
+    list_filter = ['scan_start']
+    search_fields = ['job']
+    ordering = ('-scan_start',)
+    list_per_page = 10
     inlines = [ScanResultInline]
+    
+class ScanResultAdmin(admin.ModelAdmin):
+    list_display = ('scan', 'scan_result')
+    #
+    search_fields = ['scan_result']
+    ordering = ('-scan',)
+    list_per_page = 10
     
 admin.site.register(Job, JobAdmin)
 admin.site.register(Scan, ScanAdmin)
+admin.site.register(ScanResult, ScanResultAdmin)

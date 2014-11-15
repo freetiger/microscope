@@ -212,7 +212,6 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
         print  prex,block_num
         if len(rtv) == 0:
             rtv =[{}]
-        
             
     #--------------------------------------------TODO
     #解析结果页面，需要再分析。前面的解析出的getblocks子块貌似没用到       
@@ -426,29 +425,24 @@ class GatherWorker(threading.Thread):
         for raw_loop_url in self.jobpath[parse_step]["loopUrl"]:
             hasNext = True
             lastUrl = ""
-            offset= 0
             while self.jobpath[parse_step]["needLoop"] == "1" and hasNext:            
                 status_list = [{}]
                 if "loopset" in self.jobpath[parse_step]:                        
                     loopset = self.jobpath[parse_step]["loopset"]
-                    offset_str = loopset["offsetkey"]
-                    maxnum = loopset['maxnum']
+                    offset_str = loopset["offset"]
+                    limit = loopset.get('limit', 0)
                     
-                    if maxnum.startswith("${") and maxnum[2:-1] in next_status:
-                        maxnum = next_status[maxnum[2:-1]]
-                    else:
-                        maxnum = 0
-                    print loopset,maxnum
-                    maxnum = int(maxnum)
+                    print loopset,limit
+                    limit = int(limit)
                     if offset_str not in next_status:
                         next_status[offset_str] = '1'
-                    next_status[offset_str] = str(loopset["numperpage"] + int(next_status[offset_str]))
+                    next_status[offset_str] = str(int(loopset["step"]) + int(next_status[offset_str]))
                     offset = next_status[offset_str]
                     runtime_status[offset_str] = offset
-                    print int(next_status[offset_str]), maxnum
-                    if int(next_status[offset_str]) > maxnum:
-                        print int(next_status[offset_str]), maxnum
-                        print int(next_status[offset_str]) > maxnum
+                    print int(next_status[offset_str]), limit
+                    if int(next_status[offset_str]) > limit:
+                        print int(next_status[offset_str]), limit
+                        print int(next_status[offset_str]) > limit
                         hasNext = False
                         break
                    
@@ -489,8 +483,13 @@ class OutputScanResult(threading.Thread):
             
         while True:
             items = self.sharedata.get()
-            print items
-            scanResult = ScanResult(scan_id=self.scan_id, scan_result=items)
+            #print items
+            #items = items.decode(default_jobsetting["html_encoding"],"ignore").encode('UTF-8',"ignore")
+            tempList = []
+            for item in items:
+                tempList.append(item.decode(default_jobsetting["html_encoding"],"ignore").encode('UTF-8',"ignore"))
+            scanResult = ScanResult(scan_id=self.scan_id, scan_result=tempList)
+            print tempList
             scanResult.save()
             self.sharedata.task_done()
         
@@ -506,23 +505,11 @@ class Grabber(object):
         self.output_queue = Queue()    #结果输出队列
         self.cgqueue = Queue()
         
-    def startscan(self,job_id,keyword, thread_num):
+    def startscan(self,job_id,placeholders={}, thread_num=1):
         #
-        self.dbpt.prepareScan(job_id)        
+        self.dbpt.prepareScan(job_id, placeholders)
         #
-        org_setting = None
-        if keyword is not None:
-            print keyword
-            org_setting = self.dbpt.jobsetting[0]['url'][0]
-            org_setting = org_setting.replace("${kw}",keyword)            
-
-        else:
-            print "No keyword"
-            org_setting = self.dbpt.jobsetting[0]['url'][0]
-            org_setting = org_setting.replace("${kw}","")
-            
         self.jobpath = self.dbpt.jobsetting
-        self.jobpath[0]['url'] = [org_setting,]
         
         runtime_status = {}
         #启动抓取线程，线程处于ready状态

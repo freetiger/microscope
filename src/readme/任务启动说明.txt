@@ -8,7 +8,7 @@
 
 
 
-运行python wg_jshell.pyc --jobid=任务序号 --keyword=关键字
+运行python wg_jshell.pyc --jobid=任务序号 --placeholders=规则占位符
 or
-运行python wg_jshell.py --jobid=任务序号 --keyword=关键字
+运行python wg_jshell.py --jobid=任务序号 --placeholders=规则占位符
 多个关键字用+隔开
