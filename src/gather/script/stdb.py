@@ -3,7 +3,23 @@
 import datetime
 import os
 from gather.job.models import Job, Scan
+import MySQLdb
 
+def getConnect():
+    host = 'localhost'
+    port = 3306
+    database = 'microscope'
+    user = 'hyx1161'
+    password = '1161hyx'
+    charset="utf8"
+    return MySQLdb.connect(host=host, port=port, db=database,user=user,passwd=password,charset=charset)
+
+def saveScanResult(scan_id=0, scan_result=""):
+    conn = getConnect()
+    cur = conn.cursor()
+    cur.execute("insert into job_scanresult(scan_id,scan_result) values (%s,%s)" , (int(scan_id), str(scan_result)))
+    conn.commit()
+    conn.close()
 
 class dbpipe(object):
     def __init__(self):

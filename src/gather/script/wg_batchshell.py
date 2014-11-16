@@ -2,7 +2,7 @@
 
 import sys
 import getopt
-from grabber import Grabber
+from gather.script.grabber import Grabber
 
 help_text="""Usage: python wg_batchshell.py [options]
 

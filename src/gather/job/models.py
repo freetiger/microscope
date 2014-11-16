@@ -5,8 +5,10 @@ Created on 2014年10月20日
 @author: hyx
 '''
 
-from django.db import models
 import re
+
+from django.db import models
+
 
 class Job(models.Model):
     job_name = models.CharField(max_length=256, verbose_name='任务名称')
@@ -23,6 +25,20 @@ class Job(models.Model):
         for placeholder in placeholders:
             tips.append(placeholder)
         return tips
+    
+    def scan_start(self):
+        last_scan = Scan.objects.filter(job_id=self.pk).order_by("-scan_start")[0:1]
+        if last_scan:
+            return last_scan.scan_start
+        else:
+            return ""
+                
+    def scan_end(self):
+        last_scan = Scan.objects.filter(job_id=self.pk).order_by("-scan_start")[0:1]
+        if last_scan and last_scan.scan_end>last_scan.scan_start:
+            return last_scan.scan_end
+        else:
+            return ""
     
     def __unicode__(self):
         return self.job_name

@@ -4,7 +4,7 @@ import sys
 
 import django
 
-from grabber import Grabber
+from gather.script.grabber import Grabber
 
 
 help_text="""Usage: python wg_jshell.py [options]

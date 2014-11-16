@@ -14,6 +14,7 @@ from gather.job.models import Job
 
 from gather.job.forms import RunJobForm
 from django.shortcuts import render_to_response
+from gather.script.grabber import Grabber
 
 
 # from django.http import HttpResponse
@@ -54,12 +55,13 @@ def runJobForm(request, job_id):
     if request.method == 'POST':
         form = RunJobForm(request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
-            print cd
-            return HttpResponseRedirect('/contact/thanks/')
+            form = form.cleaned_data
+            print form
+            placeholders = eval(form.get("placeholders", ""))
+            thread_num = int(form.get("thread_num", 1))
+            Grabber().startscan(job_id,placeholders, thread_num)
+            return HttpResponseRedirect('/job')
     else:
-        #form = RunJobForm()
-        #job = Job.objects.filter(id=job_id)
         job = Job.objects.get(pk=job_id)
         if job:
             form = RunJobForm(
@@ -68,11 +70,9 @@ def runJobForm(request, job_id):
                                        'placeholders': job.placeholders, 
                                        'thread_num': job.thread_num, 
                                        'create_date': job.create_date, 
+                                       'placeholders_tips': Job.placeholders_tips(job), 
                                        }
                               )
         else:
             form = RunJobForm()
-            
-        
-        print job_id
     return render_to_response('gather/job/run_job_form.html', {'form': form})

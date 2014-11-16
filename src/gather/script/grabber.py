@@ -487,16 +487,19 @@ class OutputScanResult(threading.Thread):
             #items = items.decode(default_jobsetting["html_encoding"],"ignore").encode('UTF-8',"ignore")
             tempList = []
             for item in items:
-                tempList.append(item.decode(default_jobsetting["html_encoding"],"ignore").encode('UTF-8',"ignore"))
+                tempList.append(item.decode("utf-8"))
             scanResult = ScanResult(scan_id=self.scan_id, scan_result=tempList)
-            print tempList
-            scanResult.save()
+            #scanResult.save()
+            stdb.saveScanResult(self.scan_id, tempList);
             self.sharedata.task_done()
         
 #抓取的主程序：在数据库中设置抓取前的任务状态，启动抓取线程，启动输出抓取结果的线程，在数据库中设置抓取任务的状态
 class Grabber(object):
 
     def __init__(self):
+        import sys
+        reload(sys)
+        sys.setdefaultencoding('utf-8')
         #抓取规则
         self.jobpath = []
         self.urlCheckedList = {}        

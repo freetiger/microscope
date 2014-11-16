@@ -10,6 +10,6 @@ class RunJobForm(forms.Form):
     job_name = forms.CharField(max_length=256,)
     get_rules = forms.CharField(widget=forms.Textarea, )
     placeholders = forms.CharField(max_length=256, )
-    thread_num = forms.EmailField(required=False)
+    thread_num = forms.IntegerField(required=False)
     create_date = forms.DateTimeField( )
-    message = forms.CharField()
+    placeholders_tips = forms.CharField()
