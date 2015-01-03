@@ -49,17 +49,19 @@ def saveOrUpdate(request, job_id):
     # user hits the Back button.
     return HttpResponseRedirect(reverse('job:detail', args=(job.id,)))
 
-
-
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
 def runJobForm(request, job_id):
     if request.method == 'POST':
         form = RunJobForm(request.POST)
         if form.is_valid():
             form = form.cleaned_data
             print form
+            job_name = form.get("job_name", "")
+            get_rules = form.get("get_rules", "")
             placeholders = eval(form.get("placeholders", ""))
             thread_num = int(form.get("thread_num", 1))
-            Grabber().startscan(job_id,placeholders, thread_num)
+            Grabber().startscan(job_id=job_id, job_name=job_name, get_rules=get_rules, placeholders=placeholders, thread_num=thread_num)
             return HttpResponseRedirect('/job')
     else:
         job = Job.objects.get(pk=job_id)
@@ -75,4 +77,4 @@ def runJobForm(request, job_id):
                               )
         else:
             form = RunJobForm()
-    return render_to_response('gather/job/run_job_form.html', {'form': form})
+    return render_to_response('gather/job/run_job_form.html', {'form': form, 'base_template': 'xadmin/base.html'})

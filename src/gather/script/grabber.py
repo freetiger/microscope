@@ -6,7 +6,6 @@ import threading
 import urllib2, cookielib
 
 import stdb
-from gather.job.models import ScanResult
 
 
 default_jobsetting = {"html_encoding":"GBK","parse_encoding":"utf-8"}
@@ -336,7 +335,6 @@ class GatherWorker(threading.Thread):
     def outputvalues(self,outputkeys,runtime_status):
     
         output_v = []
-        print "call output"
         for kys in outputkeys:
             if kys in runtime_status:
                 output_v.append(masktoblank(runtime_status[kys]))
@@ -358,7 +356,7 @@ class GatherWorker(threading.Thread):
     #根据所写的正则表达式执行抓取，并将结果存入output_queue
     def parsePage(self,parse_step,runtime_status):
     
-        print "call" + str(parse_step)
+        print "parsePage call" + str(parse_step)
         next_status = {}
         if parse_step>= len(self.jobpath):
             return
@@ -440,7 +438,9 @@ class GatherWorker(threading.Thread):
                     offset = next_status[offset_str]
                     runtime_status[offset_str] = offset
                     print int(next_status[offset_str]), limit
-                    if int(next_status[offset_str]) > limit:
+                    if limit<=0:
+                        pass
+                    elif int(next_status[offset_str]) > limit:
                         print int(next_status[offset_str]), limit
                         print int(next_status[offset_str]) > limit
                         hasNext = False
@@ -469,7 +469,9 @@ class GatherWorker(threading.Thread):
         return
 
 #将结果output_queue输出的最终的txt文件中
-class OutputScanResult(threading.Thread):
+class OutputFileScanResult(threading.Thread):
+    from microscope.settings import BASE_DIR
+    outputfilename = BASE_DIR+"/gather/script/OutputFileScanResult.txt"
     
     def __init__(self, threadname, scan_id, output_queue):
         
@@ -479,18 +481,16 @@ class OutputScanResult(threading.Thread):
 
     def run(self):
 
-        print self.getName(),'Started'        
+        print self.name,'Started'        
             
         while True:
             items = self.sharedata.get()
-            #print items
-            #items = items.decode(default_jobsetting["html_encoding"],"ignore").encode('UTF-8',"ignore")
-            tempList = []
+            self.outputfile = open(self.outputfilename,"a")
             for item in items:
-                tempList.append(item.decode("utf-8"))
-            scanResult = ScanResult(scan_id=self.scan_id, scan_result=tempList)
-            #scanResult.save()
-            stdb.saveScanResult(self.scan_id, tempList);
+                self.outputfile.write(item)
+                self.outputfile.write("\t")
+            self.outputfile.write("\n")
+            self.outputfile.close()
             self.sharedata.task_done()
         
 #抓取的主程序：在数据库中设置抓取前的任务状态，启动抓取线程，启动输出抓取结果的线程，在数据库中设置抓取任务的状态
@@ -508,9 +508,9 @@ class Grabber(object):
         self.output_queue = Queue()    #结果输出队列
         self.cgqueue = Queue()
         
-    def startscan(self,job_id,placeholders={}, thread_num=1):
+    def startscan(self, job_id, job_name="", get_rules="",placeholders={}, thread_num=1):
         #
-        self.dbpt.prepareScan(job_id, placeholders)
+        self.dbpt.prepareScan(job_id, job_name=job_name, get_rules=get_rules, placeholders=placeholders, thread_num=thread_num)
         #
         self.jobpath = self.dbpt.jobsetting
         
@@ -521,8 +521,12 @@ class Grabber(object):
             t.setDaemon(True)
             t.start()
         #创建输出最终结果的txt，启动输出结果的线程，线程处于ready状态
+        #清空输出结果文件
+        outputfile = open(OutputFileScanResult.outputfilename,"w")
+        outputfile.close()
+        #将结果输出到文件
         for i in range(0,1):
-            t = OutputScanResult(threadname="OutputScanResult_"+str(self.dbpt.scan_id), scan_id=self.dbpt.scan_id, output_queue=self.output_queue)
+            t = OutputFileScanResult(threadname="OutputFileScanResult_"+str(i), scan_id=self.dbpt.scan_id, output_queue=self.output_queue)
             t.setDaemon(True)
             t.start()            
         
@@ -531,7 +535,18 @@ class Grabber(object):
         #等待grbQueue线程队列结束
         self.grbQueue.join()
         #等待output_queue队列结束
-        self.output_queue.join()        
+        self.output_queue.join()   
+        
+        #将结果文件内容输出到数据库
+        outputfile = open(OutputFileScanResult.outputfilename,"r")
+        line = outputfile.readline()    # 调用文件的 readline()方法
+        while line:
+            from gather.job.models import ScanResult
+            scanResult = ScanResult(scan_id=self.dbpt.scan_id, scan_result=line.strip('\n'))
+            scanResult.save()
+            print line.strip('\n')
+            line = outputfile.readline()
+        outputfile.close()
         
         #
         self.dbpt.finishscan()
