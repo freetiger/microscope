@@ -4,33 +4,33 @@ jobpath = []
 
 jobpath.append({
         "url":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
-        "regexps":[{        
-        "str":"nextPageUrl",
-        "exp":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
-        "unique":"1",
+        "regular_matchs":[{        
+        "result":"nextPageUrl",
+        "regular":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+        "is_unique":"1",
         }, ],
-       "getblocks":{"start_str":'<html>',"end_str":'</html>',"cnt_str":"comblock"},
+       "block_matchs":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
        "encoding":"UTF-8",
-       "needLoop":"1",
+       "is_need_loop":"1",
        "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
-       "loopUrl":["${nextPageUrl1}",],
+       "loop_url":["${nextPageUrl1}",],
        "job_description":"科学松鼠会-原创列表"
     })
 
 jobpath.append({
     "url":['inline:///${comblock}',],
-    "regexps":[{        
-        "str":"title",
-        "exp":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
-        "unique":"0",
+    "regular_matchs":[{        
+        "result":"title",
+        "regular":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+        "is_unique":"0",
         },],
    "encoding":"UTF-8",
-   "needLoop":"0",
-   "loopUrl":[],
+   "is_need_loop":"0",
+   "loop_url":[],
    "job_description":"科学松鼠会-原创标题链接"
 })
 
-jobpath.append({"endflag":"1","outputkeys":["title1","title2",]})
+jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
 #end
 
 
@@ -40,33 +40,704 @@ jobpath = []
 
 jobpath.append({
         "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
-        "regexps":[{        
-        "str":"nextPageUrl",
-		"exp":['<span class="next"><a href="([^"]*)">',],
-        "unique":"1",
+        "regular_matchs":[{        
+        "result":"nextPageUrl",
+		"regular":['<span class="next"><a href="([^"]*)">',],
+        "is_unique":"1",
         }, ],
-       "getblocks":{"start_str":'<body>',"end_str":'</body>',"cnt_str":"comblock"},
+       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
        "encoding":"UTF-8",
-       "needLoop":"1",
+       "is_need_loop":"1",
        "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
-       "loopUrl":["${nextPageUrl1}",],
+       "loop_url":["${nextPageUrl1}",],
        "job_description":"豆瓣：音乐标签：摇滚"
     })
 
 jobpath.append({
     "url":['inline:///${comblock}',],
-    "regexps":[{        
-        "str":"title",
-        "exp":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>',],
-        "unique":"0",
+    "regular_matchs":[{        
+        "result":"title",
+        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>',],
+        "is_unique":"0",
         },],
    "encoding":"UTF-8",
-   "needLoop":"0",
-   "loopUrl":[],
+   "is_need_loop":"0",
+   "loop_url":[],
    "job_description":"豆瓣：音乐标签：摇滚"
 })
 
-jobpath.append({"endflag":"1","outputkeys":["title1","title2",]})
+jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+#end
+
+
+豆瓣：音乐标签：摇滚		1	None
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+		"regular":['<span class="next"><a href="([^"]*)">',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"豆瓣：音乐标签：摇滚"
+
+    })
+
+
+
+jobpath.append({
+
+    "url":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"豆瓣：音乐标签：摇滚"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title",]})
+
+#end
+
+豆瓣：音乐标签：摇滚		1	None
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+		"regular":['<span class="next"><a href="([^"]*)">',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"豆瓣：音乐标签：摇滚"
+
+    })
+
+
+
+jobpath.append({
+
+    "url":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"豆瓣：音乐标签：摇滚"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+
+#end
+
+豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+		"regular":['<span class="next"><a href="([^"]*)">',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"豆瓣：音乐标签：摇滚"
+
+    })
+
+
+
+jobpath.append({
+
+    "url":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"豆瓣：音乐标签：摇滚"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+
+#end
+
+豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+		"regular":['<span class="next"><a href="([^"]*)">',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"豆瓣：音乐标签：摇滚"
+
+    })
+
+
+
+jobpath.append({
+
+    "url":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"豆瓣：音乐标签：摇滚"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title",]})
+
+#end
+
+豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+		"regular":['<span class="next"><a href="([^"]*)">',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"豆瓣：音乐标签：摇滚"
+
+    })
+
+
+
+jobpath.append({
+
+    "url":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"豆瓣：音乐标签：摇滚"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title*",]})
+
+#end
+
+豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+		"regular":['<span class="next"><a href="([^"]*)">',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"豆瓣：音乐标签：摇滚"
+
+    })
+
+
+
+jobpath.append({
+
+    "url":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="[^"]*">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"豆瓣：音乐标签：摇滚"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title*",]})
+
+#end
+
+豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+		"regular":['<span class="next"><a href="([^"]*)">',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"豆瓣：音乐标签：摇滚"
+
+    })
+
+
+
+jobpath.append({
+
+    "url":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>(?:[^<]*<[^>]*[^<]*<.*>[^<]*){0,1}[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"豆瓣：音乐标签：摇滚"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title*",]})
+
+#end
+
+豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+		"regular":['<span class="next"><a href="([^"]*)">',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_matchs":{"start_str":'<tr class="item">',"end_str":'</tr>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"豆瓣：音乐标签：摇滚"
+
+    })
+
+
+
+jobpath.append({
+
+    "url":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[\s\S]*<div class="star clearfix">[^<]*<span class="([^"]*)"></span>[^<]*<span class="rating_nums">([^<]*)</span>[^<]*<span class="pl">\D*(\d*)',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"豆瓣：音乐标签：摇滚"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+
+#end
+
+豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+		"regular":['<span class="next"><a href="([^"]*)">',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_matchs":{"start_str":'<tr class="item">',"end_str":'</tr>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"豆瓣：音乐标签：摇滚"
+
+    })
+
+
+
+jobpath.append({
+
+    "url":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[\s\S]*<div class="star clearfix">[^<]*<span class="([^"]*)"></span>[^<]*<span class="rating_nums">([^<]*)</span>[^<]*<span class="pl">\D*(\d*)',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"豆瓣：音乐标签：摇滚"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title*",]})
+
+#end
+
+科学松鼠会-原创标题链接	{"offset":"1", "limit":"3", "step":"1"}	1	2014-11-10 11:25:48
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "url":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+        "regular":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_matchs":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"科学松鼠会-原创列表"
+
+    })
+
+
+
+jobpath.append({
+
+    "url":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regular":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"科学松鼠会-原创标题链接"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+
 #end
 
 

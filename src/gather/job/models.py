@@ -8,6 +8,7 @@ Created on 2014年10月20日
 import re
 
 from django.db import models
+from __builtin__ import super
 
 
 class Job(models.Model):
@@ -61,7 +62,7 @@ class Job(models.Model):
         from microscope.settings import BASE_DIR
         job_save_log = BASE_DIR+"/gather/script/job_save_log.txt"
         outputfile = open(job_save_log,"a")
-        outputfile.write(self.job_name)
+        outputfile.write(self.job_name) 
         outputfile.write("\t")
         outputfile.write(self.placeholders)
         outputfile.write("\t")
@@ -73,6 +74,7 @@ class Job(models.Model):
         outputfile.write("\n")
         outputfile.write("\n")
         outputfile.close()
+        super(Job, self).save()
     
 class Scan(models.Model):
     job = models.ForeignKey(Job)

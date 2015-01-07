@@ -184,16 +184,16 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
         page_src = page_src.decode(page_encoding,"ignore").encode(default_jobsetting["parse_encoding"],"ignore")
 
     
-    #开始解析获得页面page_src    
-    parse_regexps = parse_stepset["regexps"]    
+    #开始解析获得页面page_src      
 
     #依据块的定位符，从应答页面中分理出需要详细解析的结果块，可以有多块结果
     rtv = [{}]
-    if "getblocks" in parse_stepset:
+    if "block_matchs" in parse_stepset:
         rtv = []
-        bstr = parse_stepset["getblocks"]["start_str"]
-        estr = parse_stepset["getblocks"]["end_str"]
-        prex = parse_stepset["getblocks"]["cnt_str"]
+        print parse_stepset
+        bstr = parse_stepset["block_matchs"]["start_str"]
+        estr = parse_stepset["block_matchs"]["end_str"]
+        prex = parse_stepset["block_matchs"]["result"]
         tmp_src = page_src.replace("\n","").replace("\r","")
         
         b_pos = tmp_src.find(bstr)
@@ -213,15 +213,16 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
             rtv =[{}]
             
     #--------------------------------------------TODO
-    #解析结果页面，需要再分析。前面的解析出的getblocks子块貌似没用到       
-    for regexps in parse_regexps:
-        uniqueFilter = regexps["unique"]
+    #解析结果页面，需要再分析。   
+    parse_regular_matchs = parse_stepset["regular_matchs"]  
+    for regular_matchs in parse_regular_matchs:
+        is_unique = regular_matchs["is_unique"]
         datalist = []
         #使用exp中的正则表达式匹配出相关结果
-        for data_ret_str in regexps["exp"]:
+        for data_ret_str in regular_matchs["regular"]:
             tmp_src = page_src
-            if 'omittag' in regexps:
-                for omittag in regexps['omittag']:
+            if 'omittag' in regular_matchs:
+                for omittag in regular_matchs['omittag']:
                     tmp_src = removetag(tmp_src,omittag)
             pagedata_ret = re.compile(data_ret_str)
             tmp_datalist = pagedata_ret.findall(tmp_src)
@@ -233,7 +234,7 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
         if len(datalist)==0:
             tmp_list = []
             tmp_n = 0
-            while (regexps["str"]+str(tmp_n)) in runtime_status:
+            while (regular_matchs["result"]+str(tmp_n)) in runtime_status:
                 tmp_list.append("n/a")
                 tmp_n = tmp_n + 1
             if len(tmp_list)>0:
@@ -243,21 +244,21 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
                
         scroll_str = ""                    
         for data_i in range(0,len(datalist)):
-            #如果unique等于一，则只取匹配结果中的第一个值。等于0时取所有的结果
-            if uniqueFilter == "1" and data_i>0:
+            #如果is_unique等于一，则只取匹配结果中的第一个值。等于0时取所有的结果
+            if is_unique == "1" and data_i>0:
                 continue          
             data = datalist[data_i]
             grub_status = {}
 
             if type(data) == type("a"):
-                grub_status[regexps["str"]+"1"]=data
+                grub_status[regular_matchs["result"]+"1"]=data
                 scroll_str = scroll_str + data + "||"
             else:
                 for i in range(0,len(data)):                    
-                    grub_status[regexps["str"]+str(i+1)]=data[i]
+                    grub_status[regular_matchs["result"]+str(i+1)]=data[i]
                     scroll_str = scroll_str + data[i] + "||"            
 
-            if "scroll" not in regexps or regexps["scroll"]!="1":
+            if "is_scroll" not in regular_matchs or regular_matchs["is_scroll"]!="1":
                 for items in rtv:
                     tmp_map = {}
                 
@@ -268,7 +269,7 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
                         tmp_map[tmp_iks1] = items[tmp_iks1]                        
                              
                     tmp_addon_list.append(tmp_map)      
-        if "scroll" not in regexps or regexps["scroll"]!="1":
+        if "is_scroll" not in regular_matchs or regular_matchs["is_scroll"]!="1":
             if len(tmp_addon_list) == 0:
                 tmp_addon_list = [{}]
             #print str(tmp_addon_list)
@@ -287,7 +288,7 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
             if len(tmp_addon_list)==0:
                 tmp_addon_list = [{}]
             for items in tmp_addon_list:
-                items[regexps["str"]] = scroll_str
+                items[regular_matchs["result"]] = scroll_str
                 rtv.append(items)
 
     return rtv
@@ -331,11 +332,11 @@ class GatherWorker(threading.Thread):
         
         print self.getName(),'Finished'
 
-    #根据输出列表outputkeys的规则将抓取结果runtime_status（一条结果，即一行结果）整理后存入output_queue
-    def outputvalues(self,outputkeys,runtime_status):
+    #根据输出列表output_keys的规则将抓取结果runtime_status（一条结果，即一行结果）整理后存入output_queue
+    def outputvalues(self,output_keys,runtime_status):
     
         output_v = []
-        for kys in outputkeys:
+        for kys in output_keys:
             if kys in runtime_status:
                 output_v.append(masktoblank(runtime_status[kys]))
                 #print masktoblank(runtime_status[kys])
@@ -362,8 +363,8 @@ class GatherWorker(threading.Thread):
             return
         #所有的抓取规则都执行了，到了输出列表处，根据规则将结果存入output_queue
         if parse_step == len(self.jobpath)-1:
-        #and jobpath[parse_step]["endflag"] == "1":
-            self.outputvalues(self.jobpath[parse_step]["outputkeys"],runtime_status)
+        #and jobpath[parse_step]["is_end"] == "1":
+            self.outputvalues(self.jobpath[parse_step]["output_keys"],runtime_status)
             
         if "reCheck" in self.jobpath[parse_step] and self.jobpath[parse_step]["reCheck"]=="1":
             runtime_status["reCheck"] = 1
@@ -417,13 +418,13 @@ class GatherWorker(threading.Thread):
                 else:
                     print "status error "+str(tmp_status)
             #start page loop
-        #needLoop等于一时处理循环抓取的情况，可以按照loopUrl抓取下一页，还可以设置分页步进长度，分页数目
+        #is_need_loop等于一时处理循环抓取的情况，可以按照loop_url抓取下一页，还可以设置分页步进长度，分页数目
         hasNext = True
         lastUrl = ""
-        for raw_loop_url in self.jobpath[parse_step]["loopUrl"]:
+        for raw_loop_url in self.jobpath[parse_step]["loop_url"]:
             hasNext = True
             lastUrl = ""
-            while self.jobpath[parse_step]["needLoop"] == "1" and hasNext:            
+            while self.jobpath[parse_step]["is_need_loop"] == "1" and hasNext:            
                 status_list = [{}]
                 if "loopset" in self.jobpath[parse_step]:                        
                     loopset = self.jobpath[parse_step]["loopset"]
@@ -509,6 +510,11 @@ class Grabber(object):
         self.cgqueue = Queue()
         
     def startscan(self, job_id, job_name="", get_rules="",placeholders={}, thread_num=1):
+        #TODO
+        from gather.rule.models import PageInfo
+        pageInfo = PageInfo()
+        pageInfo.url = "www.baidu.com"
+        print pageInfo.url
         #
         self.dbpt.prepareScan(job_id, job_name=job_name, get_rules=get_rules, placeholders=placeholders, thread_num=thread_num)
         #
@@ -557,8 +563,16 @@ class Grabber(object):
     
 
 if __name__ == "__main__":   
-    print "just import it"
-    getUrlContent('http://sr.ju690.cn?orderby=new&dismode=discuss&day=7&p=page2')
+#     print "just import it"
+#     getUrlContent('http://sr.ju690.cn?orderby=new&dismode=discuss&day=7&p=page2')
+    src = '<div class="star clearfix"><span class="allstar45"></span><span class="rating_nums">8.4</span><span class="pl">(293人评价)</span></div>'
+    print src
+    src = removetag(src,"span")
+    print src
+    src = removetag(src,"/span")
+    print src
+    src = removetag(src,"div")
+    print src
 
     
     
