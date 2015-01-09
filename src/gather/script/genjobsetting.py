@@ -4,13 +4,13 @@ import pickle
 jobpath = []
 
 jobpath.append({
-        "url":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
+        "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
         "regular_matchs":[{        
         "result":"nextPageUrl",
-        "regular":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+        "regulars":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
         "is_unique":"1",
         }, ],
-       "block_matchs":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
+       "block_match":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
        "encoding":"UTF-8",
        "is_need_loop":"1",
        "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
@@ -19,10 +19,10 @@ jobpath.append({
     })
 
 jobpath.append({
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
     "regular_matchs":[{        
         "result":"title",
-        "regular":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+        "regulars":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
         "is_unique":"0",
         },],
    "encoding":"UTF-8",

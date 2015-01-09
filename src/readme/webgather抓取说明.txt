@@ -4,13 +4,13 @@ webgather抓取规则以列表的形式保存
 jobpath = []
 
 jobpath.append({
-    	"url":['http://search.china.alibaba.com/search/company_search.htm?province=广东省&city=佛山',],
+    	"urls":['http://search.china.alibaba.com/search/company_search.htm?province=广东省&city=佛山',],
         "regular_matchs":[{		
 		"result":"nsurl",
-		"regular":['<a  onmousedown="[^"]*"  href="([^"]*)" [^>]*>下一页</a>',],
+		"regulars":['<a  onmousedown="[^"]*"  href="([^"]*)" [^>]*>下一页</a>',],
                 "is_unique":"1",
 		}, ],
-       "block_matchs":{"start_str":'<div class="content">\n<div class="info">',"end_str":'<div class="content">\n<div class="info">',"result":"comblock"},
+       "block_match":{"start_str":'<div class="content">\n<div class="info">',"end_str":'<div class="content">\n<div class="info">',"result":"comblock"},
        "encoding":"GBK",
        "is_need_loop":"1",
        "loop_url":["${nsurl1}",],
@@ -19,18 +19,18 @@ jobpath.append({
 
 
 jobpath.append({
-    	"url":['inline:///${comblock}',],
+    	"urls":['inline:///${comblock}',],
 	"regular_matchs":[{		
 		"result":"qsurl",
-		"regular":['<span class="m undline"><a href="(http\://([^"]*).cn\.alibaba\.com/)"[^>]*>([^<]*)',
+		"regulars":['<span class="m undline"><a href="(http\://([^"]*).cn\.alibaba\.com/)"[^>]*>([^<]*)',
                        '<span class="m undline"><a href="(http\://china\.alibaba\.com/company/detail/([^"]*).html)"[^>]*>([^<]*)',
                        '<span class="m undline"><a href="(http\://company\.china\.alibaba\.com/athena/([^"]*).html)"[^>]*>([^<]*)<'],
                 "is_unique":"0",
-                "omittag":['font','/font']
+                "omit_tags":['font','/font']
 		},
                 {		
 		"result":"lxurl",
-		"regular":['<a href="([^"]*)" [^>]*>联系方式</a>',],
+		"regulars":['<a href="([^"]*)" [^>]*>联系方式</a>',],
                 "is_unique":"1",          
 		},                
 		],
@@ -41,19 +41,19 @@ jobpath.append({
 	})
 
 jobpath.append({
-    	"url":['${lxurl1}',],
+    	"urls":['${lxurl1}',],
 	"regular_matchs":[{		
 		"result":"lxr",
-		"regular":['<div class="title ml15 b mb20 mt20 mainTextColor">([^<]*)<br/>'],
+		"regulars":['<div class="title ml15 b mb20 mt20 mainTextColor">([^<]*)<br/>'],
                 "is_unique":"1",
-                "omittag":['a','/a']
+                "omit_tags":['a','/a']
 		},
                 {		
 		"result":"lxstr",
-		"regular":['<li>([^<]*)：([^<]*)</li>',],
+		"regulars":['<li>([^<]*)：([^<]*)</li>',],
                 "is_unique":"0",
                 "is_scroll":"1",
-                "omittag":['a','/a','br/']
+                "omit_tags":['a','/a','br/']
 		},
                 
 		],
@@ -65,19 +65,19 @@ jobpath.append({
 
 
 jobpath.append({
-        "url":["http://china.alibaba.com/company/detail/intro/${qsurl2}.html",],        
+        "urls":["http://china.alibaba.com/company/detail/intro/${qsurl2}.html",],        
 	"regular_matchs":[{		
 		"result":"brief",
-		"regular":["<tr>[^<]*<td[^>]*>[^<]*<div[^>]*>([^<]*)</div>[^<]*</td>[^<]*<td[^>]*>([^<]*)</td>",],
+		"regulars":["<tr>[^<]*<td[^>]*>[^<]*<div[^>]*>([^<]*)</div>[^<]*</td>[^<]*<td[^>]*>([^<]*)</td>",],
                 "is_unique":"0",
-                "omittag":['a','/a','br/','p','/p','strong','/strong'],
+                "omit_tags":['a','/a','br/','p','/p','strong','/strong'],
                 "is_scroll":"1"
 		},
                 {		
 		"result":"sbrief",
-		"regular":["<tr>[^<]*<td[^>]*>[^<]*<strong>([^<]*)</strong>[^<]*</td>[^<]*<td[^>]*>[^<]*<strong>([^<]*)</strong>[^<]*</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>([^<]*)[^<]*</td>[^<]*<td[^>]*>([^<]*)",],
+		"regulars":["<tr>[^<]*<td[^>]*>[^<]*<strong>([^<]*)</strong>[^<]*</td>[^<]*<td[^>]*>[^<]*<strong>([^<]*)</strong>[^<]*</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>([^<]*)[^<]*</td>[^<]*<td[^>]*>([^<]*)",],
                 "is_unique":"0",
-                "omittag":['a','/a','br/','p','/p','div','/div','span','/span'],
+                "omit_tags":['a','/a','br/','p','/p','div','/div','span','/span'],
                 "is_scroll":"1"
 		},
 		],
@@ -88,10 +88,10 @@ jobpath.append({
 	})
 
 jobpath.append({
-    	"url":["http://${qsurl2}.cn.alibaba.com/athena/bizreflist/${qsurl2}.html",],
+    	"urls":["http://${qsurl2}.cn.alibaba.com/athena/bizreflist/${qsurl2}.html",],
 	"regular_matchs":[{		
 		"result":"etsecond",
-		"regular":[
+		"regulars":[
                     #"<table[^>]*>[^<]*<tr>[^<]*<td[^>]*>名&nbsp;&nbsp;&nbsp;&nbsp;称：</td>[^<]*<td[^>]*>[^<]*</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>注&nbsp;册&nbsp;号：</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>注册地址：</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>法定代表人：</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>注册资本：</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>企业类型：</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>成立日期：</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>营业期限：</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>经营范围：</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>登记机关：</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>[^<]*<tr>[^<]*<td[^>]*>年检时间：</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>[^<]*</table>"
                     "<tr>[^<]*<td[^>]*>([^<]*)</td>[^<]*<td[^>]*>([^<]*)</td>[^<]*</tr>",],
                 "is_unique":"0",
@@ -115,73 +115,73 @@ jobpath.append({"is_end":"1","output_keys":["brief","sbrief","qsurl3","etsecond"
 这一层定义了两个内容
 	一、 "regular_matchs":[{		
 			"result":"nsurl",
-			"regular":['<a  onmousedown="[^"]*"  href="([^"]*)" [^>]*>下一页</a>',],
+			"regulars":['<a  onmousedown="[^"]*"  href="([^"]*)" [^>]*>下一页</a>',],
 			"is_unique":"1",
 			}, ],
 		这个正则表达式组定义了一个正则表达式，'<a  onmousedown="[^"]*"  href="([^"]*)" [^>]*>下一页</a>'，结果用"result":"nsurl",命名
 		这个结果会在随后的"is_need_loop":"1",
 				  "loop_url":["${nsurl1}",],
 		中使用，is_need_loop说明这个页面需要循环抓取，下一个抓取页面由前一次抓取到的"${nsurl1}"值决定，这个值就是前面正则表达式匹配的结果
-	二、"block_matchs":{"start_str":'<div class="content">\n<div class="info">',"end_str":'<div class="content">\n<div class="info">',"result":"comblock"},
+	二、"block_match":{"start_str":'<div class="content">\n<div class="info">',"end_str":'<div class="content">\n<div class="info">',"result":"comblock"},
 	    这个规则提取了页面中从'<div class="content">\n<div class="info">'开始，到'<div class="content">\n<div class="info">'结束的一段html代码
 	    这个代码会在第二层中用到
 
-2.第二层"url":['inline:///${comblock}',],指明解析内容为第一层抓取中抓取到的${comblock}值，
+2.第二层"urls":['inline:///${comblock}',],指明解析内容为第一层抓取中抓取到的${comblock}值，
   第二层定义了正则表达式组：
   "regular_matchs":[{		
 		"result":"qsurl",
-		"regular":['<span class="m undline"><a href="(http\://([^"]*).cn\.alibaba\.com/)"[^>]*>([^<]*)',
+		"regulars":['<span class="m undline"><a href="(http\://([^"]*).cn\.alibaba\.com/)"[^>]*>([^<]*)',
                        '<span class="m undline"><a href="(http\://china\.alibaba\.com/company/detail/([^"]*).html)"[^>]*>([^<]*)',
                        '<span class="m undline"><a href="(http\://company\.china\.alibaba\.com/athena/([^"]*).html)"[^>]*>([^<]*)<'],
                 "is_unique":"0",
-                "omittag":['font','/font']
+                "omit_tags":['font','/font']
 		},
                 {		
 		"result":"lxurl",
-		"regular":['<a href="([^"]*)" [^>]*>联系方式</a>',],
+		"regulars":['<a href="([^"]*)" [^>]*>联系方式</a>',],
                 "is_unique":"1",          
 		},                
 		],
   其中{		
 		"result":"qsurl",
-		"regular":['<span class="m undline"><a href="(http\://([^"]*).cn\.alibaba\.com/)"[^>]*>([^<]*)',
+		"regulars":['<span class="m undline"><a href="(http\://([^"]*).cn\.alibaba\.com/)"[^>]*>([^<]*)',
                        '<span class="m undline"><a href="(http\://china\.alibaba\.com/company/detail/([^"]*).html)"[^>]*>([^<]*)',
                        '<span class="m undline"><a href="(http\://company\.china\.alibaba\.com/athena/([^"]*).html)"[^>]*>([^<]*)<'],
                 "is_unique":"0",
-                "omittag":['font','/font']
+                "omit_tags":['font','/font']
 		},
   定义了三个正则表达式，这三个正则表达式匹配的结果会顺序保存在一个列表中，每个正则表达式匹配会生成一个3项的tupple,(公司url,公司代号,公司名称),三个值分别对应qsurl1,qsurl2,qsurl3
-  "omittag":['font','/font']表示匹配前过滤掉'font','/font'两个tag
+  "omit_tags":['font','/font']表示匹配前过滤掉'font','/font'两个tag
   "is_unique":"0",表示抓全部的结果，这个值是1的话，只取第一个结果
 
   第二个正则表达式组
   {		
 		"result":"lxurl",
-		"regular":['<a href="([^"]*)" [^>]*>联系方式</a>',],
+		"regulars":['<a href="([^"]*)" [^>]*>联系方式</a>',],
                 "is_unique":"1",          
 		},  
   定义了联系方式指向的url，并作为${lxurl1}来保存，这个值只需取第一个
 
 
-3.第三层起始url为"url":['${lxurl1}',],   
+3.第三层起始url为"urls":['${lxurl1}',],   
 这个是公司联系方式页，是第二层中 {		
 		"result":"lxurl",
-		"regular":['<a href="([^"]*)" [^>]*>联系方式</a>',],
+		"regulars":['<a href="([^"]*)" [^>]*>联系方式</a>',],
                 "is_unique":"1",          
 		},匹配的结果
 
 规则中	"regular_matchs":[{		
 		"result":"lxr",
-		"regular":['<div class="title ml15 b mb20 mt20 mainTextColor">([^<]*)<br/>'],
+		"regulars":['<div class="title ml15 b mb20 mt20 mainTextColor">([^<]*)<br/>'],
                 "is_unique":"1",
-                "omittag":['a','/a']
+                "omit_tags":['a','/a']
 		},
                 {		
 		"result":"lxstr",
-		"regular":['<li>([^<]*)：([^<]*)</li>',],
+		"regulars":['<li>([^<]*)：([^<]*)</li>',],
                 "is_unique":"0",
                 "is_scroll":"1",
-                "omittag":['a','/a','br/']
+                "omit_tags":['a','/a','br/']
 		},                
 		],
 分别定义了联系人，联系方式的抓取
@@ -221,8 +221,8 @@ jobpath.append({"is_end":"1","output_keys":["brief","sbrief","qsurl3","etsecond"
 
 callprint=1 终止抓取
 regular_matchs 解析页面规则
-block_matchs：定义目标页面需要解析的代码块
-omittag:匹配前过滤掉相关的标签
+block_match：定义目标页面需要解析的代码块
+omit_tags:匹配前过滤掉相关的标签
 
 
 

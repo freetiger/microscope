@@ -3,13 +3,13 @@
 jobpath = []
 
 jobpath.append({
-        "url":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
+        "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
         "regular_matchs":[{        
         "result":"nextPageUrl",
-        "regular":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+        "regulars":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
         "is_unique":"1",
         }, ],
-       "block_matchs":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
+       "block_match":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
        "encoding":"UTF-8",
        "is_need_loop":"1",
        "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
@@ -18,10 +18,10 @@ jobpath.append({
     })
 
 jobpath.append({
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
     "regular_matchs":[{        
         "result":"title",
-        "regular":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+        "regulars":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
         "is_unique":"0",
         },],
    "encoding":"UTF-8",
@@ -39,13 +39,13 @@ jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
 jobpath = []
 
 jobpath.append({
-        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+        "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
         "regular_matchs":[{        
         "result":"nextPageUrl",
-		"regular":['<span class="next"><a href="([^"]*)">',],
+		"regulars":['<span class="next"><a href="([^"]*)">',],
         "is_unique":"1",
         }, ],
-       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+       "block_match":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
        "encoding":"UTF-8",
        "is_need_loop":"1",
        "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
@@ -54,10 +54,10 @@ jobpath.append({
     })
 
 jobpath.append({
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
     "regular_matchs":[{        
         "result":"title",
-        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>',],
+        "regulars":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>',],
         "is_unique":"0",
         },],
    "encoding":"UTF-8",
@@ -79,19 +79,19 @@ jobpath = []
 
 jobpath.append({
 
-        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+        "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
         "regular_matchs":[{        
 
         "result":"nextPageUrl",
 
-		"regular":['<span class="next"><a href="([^"]*)">',],
+		"regulars":['<span class="next"><a href="([^"]*)">',],
 
         "is_unique":"1",
 
         }, ],
 
-       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+       "block_match":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
 
        "encoding":"UTF-8",
 
@@ -109,13 +109,13 @@ jobpath.append({
 
 jobpath.append({
 
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
 
     "regular_matchs":[{        
 
         "result":"title",
 
-        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
+        "regulars":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
 
         "is_unique":"0",
 
@@ -146,19 +146,19 @@ jobpath = []
 
 jobpath.append({
 
-        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+        "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
         "regular_matchs":[{        
 
         "result":"nextPageUrl",
 
-		"regular":['<span class="next"><a href="([^"]*)">',],
+		"regulars":['<span class="next"><a href="([^"]*)">',],
 
         "is_unique":"1",
 
         }, ],
 
-       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+       "block_match":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
 
        "encoding":"UTF-8",
 
@@ -176,13 +176,13 @@ jobpath.append({
 
 jobpath.append({
 
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
 
     "regular_matchs":[{        
 
         "result":"title",
 
-        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>',],
+        "regulars":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>',],
 
         "is_unique":"0",
 
@@ -213,19 +213,19 @@ jobpath = []
 
 jobpath.append({
 
-        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+        "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
         "regular_matchs":[{        
 
         "result":"nextPageUrl",
 
-		"regular":['<span class="next"><a href="([^"]*)">',],
+		"regulars":['<span class="next"><a href="([^"]*)">',],
 
         "is_unique":"1",
 
         }, ],
 
-       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+       "block_match":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
 
        "encoding":"UTF-8",
 
@@ -243,13 +243,13 @@ jobpath.append({
 
 jobpath.append({
 
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
 
     "regular_matchs":[{        
 
         "result":"title",
 
-        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>',],
+        "regulars":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>',],
 
         "is_unique":"0",
 
@@ -280,19 +280,19 @@ jobpath = []
 
 jobpath.append({
 
-        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+        "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
         "regular_matchs":[{        
 
         "result":"nextPageUrl",
 
-		"regular":['<span class="next"><a href="([^"]*)">',],
+		"regulars":['<span class="next"><a href="([^"]*)">',],
 
         "is_unique":"1",
 
         }, ],
 
-       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+       "block_match":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
 
        "encoding":"UTF-8",
 
@@ -310,13 +310,13 @@ jobpath.append({
 
 jobpath.append({
 
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
 
     "regular_matchs":[{        
 
         "result":"title",
 
-        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
+        "regulars":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
 
         "is_unique":"0",
 
@@ -347,19 +347,19 @@ jobpath = []
 
 jobpath.append({
 
-        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+        "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
         "regular_matchs":[{        
 
         "result":"nextPageUrl",
 
-		"regular":['<span class="next"><a href="([^"]*)">',],
+		"regulars":['<span class="next"><a href="([^"]*)">',],
 
         "is_unique":"1",
 
         }, ],
 
-       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+       "block_match":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
 
        "encoding":"UTF-8",
 
@@ -377,13 +377,13 @@ jobpath.append({
 
 jobpath.append({
 
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
 
     "regular_matchs":[{        
 
         "result":"title",
 
-        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
+        "regulars":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
 
         "is_unique":"0",
 
@@ -414,19 +414,19 @@ jobpath = []
 
 jobpath.append({
 
-        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+        "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
         "regular_matchs":[{        
 
         "result":"nextPageUrl",
 
-		"regular":['<span class="next"><a href="([^"]*)">',],
+		"regulars":['<span class="next"><a href="([^"]*)">',],
 
         "is_unique":"1",
 
         }, ],
 
-       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+       "block_match":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
 
        "encoding":"UTF-8",
 
@@ -444,13 +444,13 @@ jobpath.append({
 
 jobpath.append({
 
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
 
     "regular_matchs":[{        
 
         "result":"title",
 
-        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="[^"]*">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
+        "regulars":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="[^"]*">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
 
         "is_unique":"0",
 
@@ -481,19 +481,19 @@ jobpath = []
 
 jobpath.append({
 
-        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+        "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
         "regular_matchs":[{        
 
         "result":"nextPageUrl",
 
-		"regular":['<span class="next"><a href="([^"]*)">',],
+		"regulars":['<span class="next"><a href="([^"]*)">',],
 
         "is_unique":"1",
 
         }, ],
 
-       "block_matchs":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
+       "block_match":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
 
        "encoding":"UTF-8",
 
@@ -511,13 +511,13 @@ jobpath.append({
 
 jobpath.append({
 
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
 
     "regular_matchs":[{        
 
         "result":"title",
 
-        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>(?:[^<]*<[^>]*[^<]*<.*>[^<]*){0,1}[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
+        "regulars":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>(?:[^<]*<[^>]*[^<]*<.*>[^<]*){0,1}[^<]*</a>(?:[^<]*<a[^>]*[^<]*</a>)*[^<]*<div class="star clearfix">[^<]*<span class="([^"]*)"[^<]</span>[^<]*<span class="([^"]*)">([^<]*)</span>[^<]*<[^>]*>[^\d]*(\d*)',],
 
         "is_unique":"0",
 
@@ -548,19 +548,19 @@ jobpath = []
 
 jobpath.append({
 
-        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+        "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
         "regular_matchs":[{        
 
         "result":"nextPageUrl",
 
-		"regular":['<span class="next"><a href="([^"]*)">',],
+		"regulars":['<span class="next"><a href="([^"]*)">',],
 
         "is_unique":"1",
 
         }, ],
 
-       "block_matchs":{"start_str":'<tr class="item">',"end_str":'</tr>',"result":"comblock"},
+       "block_match":{"start_str":'<tr class="item">',"end_str":'</tr>',"result":"comblock"},
 
        "encoding":"UTF-8",
 
@@ -578,13 +578,13 @@ jobpath.append({
 
 jobpath.append({
 
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
 
     "regular_matchs":[{        
 
         "result":"title",
 
-        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[\s\S]*<div class="star clearfix">[^<]*<span class="([^"]*)"></span>[^<]*<span class="rating_nums">([^<]*)</span>[^<]*<span class="pl">\D*(\d*)',],
+        "regulars":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[\s\S]*<div class="star clearfix">[^<]*<span class="([^"]*)"></span>[^<]*<span class="rating_nums">([^<]*)</span>[^<]*<span class="pl">\D*(\d*)',],
 
         "is_unique":"0",
 
@@ -615,19 +615,19 @@ jobpath = []
 
 jobpath.append({
 
-        "url":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
+        "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
         "regular_matchs":[{        
 
         "result":"nextPageUrl",
 
-		"regular":['<span class="next"><a href="([^"]*)">',],
+		"regulars":['<span class="next"><a href="([^"]*)">',],
 
         "is_unique":"1",
 
         }, ],
 
-       "block_matchs":{"start_str":'<tr class="item">',"end_str":'</tr>',"result":"comblock"},
+       "block_match":{"start_str":'<tr class="item">',"end_str":'</tr>',"result":"comblock"},
 
        "encoding":"UTF-8",
 
@@ -645,13 +645,13 @@ jobpath.append({
 
 jobpath.append({
 
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
 
     "regular_matchs":[{        
 
         "result":"title",
 
-        "regular":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[\s\S]*<div class="star clearfix">[^<]*<span class="([^"]*)"></span>[^<]*<span class="rating_nums">([^<]*)</span>[^<]*<span class="pl">\D*(\d*)',],
+        "regulars":['<td valign="top">\s*<div class="pl2">\s*<a\s*href="([^"]*)"\s*title="([^"]*)"\s*>[\s\S]*<div class="star clearfix">[^<]*<span class="([^"]*)"></span>[^<]*<span class="rating_nums">([^<]*)</span>[^<]*<span class="pl">\D*(\d*)',],
 
         "is_unique":"0",
 
@@ -682,19 +682,19 @@ jobpath = []
 
 jobpath.append({
 
-        "url":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
+        "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
 
         "regular_matchs":[{        
 
         "result":"nextPageUrl",
 
-        "regular":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+        "regulars":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
 
         "is_unique":"1",
 
         }, ],
 
-       "block_matchs":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
+       "block_match":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
 
        "encoding":"UTF-8",
 
@@ -712,13 +712,13 @@ jobpath.append({
 
 jobpath.append({
 
-    "url":['inline:///${comblock}',],
+    "urls":['inline:///${comblock}',],
 
     "regular_matchs":[{        
 
         "result":"title",
 
-        "regular":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+        "regulars":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
 
         "is_unique":"0",
 
@@ -740,4 +740,205 @@ jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
 
 #end
 
+
+科学松鼠会-原创标题链接	{"offset":"1", "limit":"1", "step":"1"}	1	2014-11-10 11:25:48
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+        "regulars":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_match":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"科学松鼠会-原创列表"
+
+    })
+
+
+
+jobpath.append({
+
+    "urls":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regulars":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"科学松鼠会-原创标题链接"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+
+#end
+
+科学松鼠会-原创标题链接	{"offset":"1", "limit":"1", "step":"1"}	1	2014-11-10 11:25:48
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+        "regulars":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_match":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"科学松鼠会-原创列表"
+
+    })
+
+
+
+jobpath.append({
+
+    "urls":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regulars":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"科学松鼠会-原创标题链接"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+
+#end
+
+科学松鼠会-原创标题链接	{"offset":"1", "limit":"1", "step":"1"}	1	2014-11-10 11:25:48
+#start
+
+jobpath = []
+
+
+
+jobpath.append({
+
+        "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+        "regulars":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_match":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_url":["${nextPageUrl1}",],
+
+       "job_description":"科学松鼠会-原创列表"
+
+    })
+
+
+
+jobpath.append({
+
+    "urls":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regulars":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_url":[],
+
+   "job_description":"科学松鼠会-原创标题链接"
+
+})
+
+
+
+jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+
+#end
 

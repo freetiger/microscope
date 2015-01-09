@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from Queue import Queue
+import datetime
 import re
 import threading
 import urllib2, cookielib
 
-import stdb
+from gather.job.models import Job, Scan
+from gather.script.models import PageInfo, BlockMatch, RegularMatch
 
-
-default_jobsetting = {"html_encoding":"GBK","parse_encoding":"utf-8"}
 jobpath = []
 outfile = None
 urlCheckedList = {}
@@ -74,14 +74,12 @@ def getUrlContent(inUrl,postdata=None):
         #print "get blank url"
         return ""
     inUrl = urlzhuanyi(inUrl)
-    #print "call getUrlContent"
            
     if inUrl.startswith("file:///"):
         tmp_file = open(inUrl[8:],"r")
         filesrc = tmp_file.read()
         tmp_file.close()
         print "request: "+str(inUrl)
-        #print "done getUrlContent"
         return filesrc
     elif inUrl.startswith("inline:///"):
         return inUrl[10:]
@@ -124,107 +122,102 @@ def getUrlContent(inUrl,postdata=None):
                 htmlsrc = ""
                 tpnum = tpnum - 1
         except urllib2.URLError,err:
-            print "error getUrlContent"
             print err
             return None
     return htmlsrc
 
-#移除html标签，特别的：br标签替换成一个空格
-def removetag(src,inTag):
+'''
+移除html标签，特别的：br标签替换成一个空格
+'''
+def remove_tag(page_src,omit_tag):
     
     chunk_list = []
-    tag_head = "<"+inTag
-    b_pos = src.find(tag_head)
+    tag_head = "<"+omit_tag
+    b_pos = page_src.find(tag_head)
     e_pos = 0
     while b_pos>=0 and e_pos>=0:
-        if inTag.startswith("br"):
-            chunk_list.append(src[e_pos:b_pos]+" ")
+        if omit_tag.startswith("br"):
+            chunk_list.append(page_src[e_pos:b_pos]+" ")
         else:
-            chunk_list.append(src[e_pos:b_pos])
-        e_pos = src.find(">",b_pos)+1
-        b_pos = src.find(tag_head,e_pos)
+            chunk_list.append(page_src[e_pos:b_pos])
+        e_pos = page_src.find(">",b_pos)+1
+        b_pos = page_src.find(tag_head,e_pos)
     if b_pos == -1 and e_pos >=0:
-        chunk_list.append(src[e_pos:])
+        chunk_list.append(page_src[e_pos:])
     return ''.join(chunk_list)
 
+'''
+批量移除html标签，特别的：br标签替换成一个空格
+page_src= '<div>he<a href="www.baidu.com">yu</a>'xing</div>
+omit_tags=['a','/a','br/','p','/p','div','/div','span','/span']
+return 'heyuxing'
+'''
+def remove_tags(page_src, omit_tags=[]):
+    if omit_tags is not None:
+        for omit_tag in omit_tags:
+            page_src = remove_tag(page_src,omit_tag)
+    return page_src
+'''
+依据块的定位符，从应答页面中分理出需要详细解析的结果块，可以有多块结果。
+result：value
+块名字：块数据
+http://www.baidu.com/s?wd=github
+return [{"title_result":"<a>oschina (开源中国) · </a>"}, {"title_result":"<a>首页、文档和下载 - 代码托管服务 - 开源中国社区</a>"}, ]
+'''
+def parse_block_match(page_src, block_match):
+    rtv = []
+    if block_match is not None:
+        start_str = block_match.start_str
+        end_str = block_match.end_str
+        result = block_match.result
+        tmp_src = page_src.replace("\n","").replace("\r","")
+        
+        b_pos = tmp_src.find(start_str)
+        block_num = 0
+        while b_pos >= 0:
+            block_num += 1
+            e_pos = tmp_src.find(end_str,b_pos+len(start_str))
+            rtv.append({result:tmp_src[b_pos:e_pos]})
+            if e_pos>=0:
+                b_pos = tmp_src.find(start_str,e_pos)
+            else: #未找到结束块e_pos为负值，跳出while循环
+                b_pos = e_pos
+        print  result,block_num
+    if len(rtv) == 0:
+        rtv =[{}]
+    return rtv
+
 #raw_url:获取页面的链接
-#parse_stepset:解析页面的规则
-#运行时的一些状态，中间值、解析结果等
-def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
-                                    
-    global default_jobsetting, wdg
-    
+#page_info:解析页面的规则
+#runtime_status：运行时的一些状态，中间值、解析结果等
+def parse_page_data(raw_url,page_info,runtime_status,postdata=None):
     #获取raw_url的应答页面，并处理好编码问题
-    param_retrieve_str = re.compile(r'\$\{([^}]*)\}')
-    params = param_retrieve_str.findall(raw_url)    
-    for items in params:
-        if items not in runtime_status:
-            print "can't find "+items+" in runtime status when reg page data. "
-            return []
-        raw_url = raw_url.replace('${'+items+'}',runtime_status[items])
-    #print str(runtime_status)
-   
-    page_encoding = default_jobsetting["html_encoding"]
-    if "encoding" in parse_stepset:
-        page_encoding = parse_stepset["encoding"]
+    page_encoding = "GBK"
+    if "encoding" in page_info:
+        page_encoding = page_info["encoding"]
+    #
     raw_url = raw_url.decode("UTF-8","ignore").encode(page_encoding,"ignore")
     page_src = getUrlContent(raw_url,postdata)
-    #if raw_url not in wdg:
-    #    tmp_file = open("111"+str(len(raw_url))+".html","w")
-    #    tmp_file.write(raw_url)
-    #    tmp_file.write("\n\n")
-    #    tmp_file.write(page_src)
-    #    tmp_file.write("\n\n")        
-    #    tmp_file.close()
-    #    wdg[raw_url] = 1
-   
+    #
     if page_encoding == "unicode":
-        page_src = eval("u'"+page_src+"'").encode(default_jobsetting["parse_encoding"],"ignore")
+        page_src = eval("u'"+page_src+"'").encode('utf-8',"ignore")
     else:
-        page_src = page_src.decode(page_encoding,"ignore").encode(default_jobsetting["parse_encoding"],"ignore")
-
+        page_src = page_src.decode(page_encoding,"ignore").encode('utf-8',"ignore")
     
     #开始解析获得页面page_src      
 
     #依据块的定位符，从应答页面中分理出需要详细解析的结果块，可以有多块结果
-    rtv = [{}]
-    if "block_matchs" in parse_stepset:
-        rtv = []
-        print parse_stepset
-        bstr = parse_stepset["block_matchs"]["start_str"]
-        estr = parse_stepset["block_matchs"]["end_str"]
-        prex = parse_stepset["block_matchs"]["result"]
-        tmp_src = page_src.replace("\n","").replace("\r","")
-        
-        b_pos = tmp_src.find(bstr)
-        block_num = 0
-        #if b_pos<0:
-        #    print "can't find "+bstr+" in "+page_src
-        while b_pos >= 0:
-            block_num += 1
-            e_pos = tmp_src.find(estr,b_pos+len(bstr))
-            rtv.append({prex:tmp_src[b_pos:e_pos]})
-            if e_pos>=0:
-                b_pos = tmp_src.find(bstr,e_pos)
-            else: #未找到结束块e_pos为负值，跳出while循环
-                b_pos = e_pos
-        print  prex,block_num
-        if len(rtv) == 0:
-            rtv =[{}]
+    rtv = parse_block_match(page_src, page_info.block_match)
             
     #--------------------------------------------TODO
     #解析结果页面，需要再分析。   
-    parse_regular_matchs = parse_stepset["regular_matchs"]  
-    for regular_matchs in parse_regular_matchs:
-        is_unique = regular_matchs["is_unique"]
-        datalist = []
+    for regular_match in page_info.regular_matchs:
+        datalist = []   #正则表达式中捕获到的数据
         #使用exp中的正则表达式匹配出相关结果
-        for data_ret_str in regular_matchs["regular"]:
-            tmp_src = page_src
-            if 'omittag' in regular_matchs:
-                for omittag in regular_matchs['omittag']:
-                    tmp_src = removetag(tmp_src,omittag)
-            pagedata_ret = re.compile(data_ret_str)
+        for regular in regular_match.regulars:
+            tmp_src = page_src  #page_src循环匹配中会多次使用
+            tmp_src = remove_tags(tmp_src, regular_match.omit_tags)
+            pagedata_ret = re.compile(regular)
             tmp_datalist = pagedata_ret.findall(tmp_src)
             if len(tmp_datalist)>0:
                 for items in tmp_datalist:
@@ -234,31 +227,32 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
         if len(datalist)==0:
             tmp_list = []
             tmp_n = 0
-            while (regular_matchs["result"]+str(tmp_n)) in runtime_status:
+            while (regular_match.result+str(tmp_n)) in runtime_status:
                 tmp_list.append("n/a")
                 tmp_n = tmp_n + 1
             if len(tmp_list)>0:
-                datalist.append(tmp_list) 
+                datalist = tmp_list
             
         tmp_addon_list = []           
                
         scroll_str = ""                    
         for data_i in range(0,len(datalist)):
             #如果is_unique等于一，则只取匹配结果中的第一个值。等于0时取所有的结果
-            if is_unique == "1" and data_i>0:
+            if regular_match.is_unique == "1" and data_i>0:
                 continue          
             data = datalist[data_i]
             grub_status = {}
 
-            if type(data) == type("a"):
-                grub_status[regular_matchs["result"]+"1"]=data
+            if type(data) == type("a"): #TODO 字符？
+                grub_status[regular_match.result+"1"]=data
                 scroll_str = scroll_str + data + "||"
             else:
                 for i in range(0,len(data)):                    
-                    grub_status[regular_matchs["result"]+str(i+1)]=data[i]
+                    grub_status[regular_match.result+str(i+1)]=data[i]
                     scroll_str = scroll_str + data[i] + "||"            
 
-            if "is_scroll" not in regular_matchs or regular_matchs["is_scroll"]!="1":
+            if "is_scroll" not in regular_match or regular_match.is_scroll!="1":
+                #rtv做过分块匹配parse_block_match后，会有一个或一个以上的结果，数据存储方式[{}]，所有的分块结果在此处和
                 for items in rtv:
                     tmp_map = {}
                 
@@ -269,10 +263,9 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
                         tmp_map[tmp_iks1] = items[tmp_iks1]                        
                              
                     tmp_addon_list.append(tmp_map)      
-        if "is_scroll" not in regular_matchs or regular_matchs["is_scroll"]!="1":
+        if "is_scroll" not in regular_match or regular_match.is_scroll!="1":
             if len(tmp_addon_list) == 0:
                 tmp_addon_list = [{}]
-            #print str(tmp_addon_list)
             else:
                 rtv = []
                 for items in tmp_addon_list:
@@ -288,22 +281,22 @@ def regpagedata(raw_url,parse_stepset,runtime_status,postdata=None):
             if len(tmp_addon_list)==0:
                 tmp_addon_list = [{}]
             for items in tmp_addon_list:
-                items[regular_matchs["result"]] = scroll_str
+                items[regular_match.result] = scroll_str
                 rtv.append(items)
 
     return rtv
 
-#占位符替换为实际值：in_url中包含占位符${}，runtime_status中存储了占位符的实际值
-def urlinsocket(in_url,runtime_status):
-    
+#中间变量换为实际值：source中包含占位符${}，runtime_status中存储了占位符的实际值
+def setVariables(source,runtime_status):
     param_retrieve_str = re.compile(r'\$\{([^}]*)\}')
-    params = param_retrieve_str.findall(in_url)
+    params = param_retrieve_str.findall(source)
     for items in params:
         if items not in runtime_status:
-            print "can't find "+items+" in runtime status when urlinsocket"
+            print "can't find "+items+" in runtime status when setVariables"
             return ""
-        in_url = in_url.replace('${'+items+'}',str(runtime_status[items]))
-    return in_url
+        else:
+            source = source.replace('${'+items+'}',str(runtime_status[items]))
+    return source
     
 
 
@@ -316,7 +309,7 @@ class GatherWorker(threading.Thread):
         #执行抓取的线程队列
         self.sharedata = queue
         #抓取规则
-        self.jobpath = jobpath
+        self.jobpath = jobpath #PageInfo的list集合
         #输出队列
         self.output_queue = output_queue
 
@@ -351,7 +344,6 @@ class GatherWorker(threading.Thread):
             else:
                 output_v.append("n\\a")
 
-        #self.dbpt.writeData([output_v,])
         self.output_queue.put(output_v)        
 
     #根据所写的正则表达式执行抓取，并将结果存入output_queue
@@ -362,40 +354,34 @@ class GatherWorker(threading.Thread):
         if parse_step>= len(self.jobpath):
             return
         #所有的抓取规则都执行了，到了输出列表处，根据规则将结果存入output_queue
-        if parse_step == len(self.jobpath)-1:
-        #and jobpath[parse_step]["is_end"] == "1":
+        if parse_step >= len(self.jobpath)-1 or self.jobpath[parse_step]["is_end"] == "1":
             self.outputvalues(self.jobpath[parse_step]["output_keys"],runtime_status)
+            return
             
-        if "reCheck" in self.jobpath[parse_step] and self.jobpath[parse_step]["reCheck"]=="1":
-            runtime_status["reCheck"] = 1
-        else:
-            runtime_status["reCheck"] = 0
+        page_info = PageInfo(self.jobpath[parse_step])
         status_list = []
-        #所有的抓取规则都执行了，到了输出列表处（字典self.jobpath[parse_step]不包含url这个key），结束抓取
-        if "url" not in self.jobpath[parse_step]:
+        #所有的抓取规则都执行了，到了输出列表处（字典page_info不包含url这个key），结束抓取
+        if not page_info.urls:
             return
         #执行parse_step该步的抓取：parse_step在这个循环处没有自增，遍历的是url的集合
-        for p_u in self.jobpath[parse_step]["url"]:
-            if parse_step == 0:
-                tmp_pathlist = p_u.split("/")
-                runtime_status["page_path"] = p_u[:p_u.find(tmp_pathlist[-1])]
-
-            raw_url = urlinsocket(p_u,runtime_status)
-            if raw_url == None or raw_url == "":
-                if "callprint" in self.jobpath[parse_step] and self.jobpath[parse_step]["callprint"]=="1":
-                    print "halt then call print "
+        for p_u in page_info.urls:
+            raw_url = setVariables(p_u,runtime_status)
+            #遇到终止标识，提前终止抓取
+            if raw_url == None or raw_url.trip() == "":
+                if "is_end" in page_info and page_info["is_end"]=="1":
+                    print "Early termination！"
                     self.sharedata.put((len(self.jobpath)-1,runtime_status))
                 return
             
-            if "postdata" in self.jobpath[parse_step]:
-                status_list = regpagedata(raw_url,self.jobpath[parse_step],runtime_status,self.jobpath[parse_step]["postdata"])
+            if "postdata" in page_info:
+                status_list = parse_page_data(raw_url,page_info,runtime_status,page_info["postdata"])
             else:
-                status_list = regpagedata(raw_url,self.jobpath[parse_step],runtime_status,None)
+                status_list = parse_page_data(raw_url,page_info,runtime_status,None)
 
             print "return list : "+str(len(status_list))
             
             if len(status_list) ==0 or ( len(status_list) == 1 and len(status_list[0]) == 0 ):
-                if "callprint" in self.jobpath[parse_step] and self.jobpath[parse_step]["callprint"]=="1":
+                if "callprint" in page_info and page_info["callprint"]=="1":
                     print "halt then call print "
                     self.sharedata.put((len(self.jobpath)-1,runtime_status))
                 return
@@ -421,13 +407,13 @@ class GatherWorker(threading.Thread):
         #is_need_loop等于一时处理循环抓取的情况，可以按照loop_url抓取下一页，还可以设置分页步进长度，分页数目
         hasNext = True
         lastUrl = ""
-        for raw_loop_url in self.jobpath[parse_step]["loop_url"]:
+        for raw_loop_url in page_info["loop_url"]:
             hasNext = True
             lastUrl = ""
-            while self.jobpath[parse_step]["is_need_loop"] == "1" and hasNext:            
+            while page_info["is_need_loop"] == "1" and hasNext:            
                 status_list = [{}]
-                if "loopset" in self.jobpath[parse_step]:                        
-                    loopset = self.jobpath[parse_step]["loopset"]
+                if "loopset" in page_info:                        
+                    loopset = page_info["loopset"]
                     offset_str = loopset["offset"]
                     limit = loopset.get('limit', 0)
                     
@@ -447,14 +433,14 @@ class GatherWorker(threading.Thread):
                         hasNext = False
                         break
                    
-                next_url = urlinsocket(raw_loop_url,next_status)                
+                next_url = setVariables(raw_loop_url,next_status)                
                 
                 if len(next_url) == 0 or next_url == lastUrl:            
                     hasNext = False
                 else:
                     lastUrl = next_url            
                     
-                    status_list = regpagedata(raw_loop_url,self.jobpath[parse_step],next_status)                    
+                    status_list = parse_page_data(raw_loop_url,page_info,next_status)                    
                     
                     for status in status_list:                
                         if type(status) == type({}):
@@ -482,8 +468,7 @@ class OutputFileScanResult(threading.Thread):
 
     def run(self):
 
-        print self.name,'Started'        
-            
+        print self.name,'Started'    
         while True:
             items = self.sharedata.get()
             self.outputfile = open(self.outputfilename,"a")
@@ -498,27 +483,92 @@ class OutputFileScanResult(threading.Thread):
 class Grabber(object):
 
     def __init__(self):
-        import sys
-        reload(sys)
-        sys.setdefaultencoding('utf-8')
         #抓取规则
         self.jobpath = []
         self.urlCheckedList = {}        
-        self.dbpt = stdb.dbpipe()
         self.grbQueue = Queue()  #抓取队列      
         self.output_queue = Queue()    #结果输出队列
         self.cgqueue = Queue()
         
-    def startscan(self, job_id, job_name="", get_rules="",placeholders={}, thread_num=1):
-        #TODO
-        from gather.rule.models import PageInfo
-        pageInfo = PageInfo()
-        pageInfo.url = "www.baidu.com"
-        print pageInfo.url
+        self.job_id = None
+        self.scan_id = 0
+        
+    def cleanParams(self, job_name="", get_rules="",placeholders={}, thread_num=0):
+        job = Job.objects.get(pk=self.job_id)
+        print job
+        if job_name=="":
+            job_name = job.job_name
+        if get_rules=="":
+            get_rules = job.get_rules
+        #传入的参数覆盖数据库中的数值
+        if len(job.placeholders)>0:
+            temp_placeholders = eval(job.placeholders)
+            for placeholder_key in placeholders:
+                temp_placeholders[placeholder_key] = placeholders[placeholder_key]
+        else:
+            temp_placeholders = placeholders
         #
-        self.dbpt.prepareScan(job_id, job_name=job_name, get_rules=get_rules, placeholders=placeholders, thread_num=thread_num)
+        placeholders = temp_placeholders
         #
-        self.jobpath = self.dbpt.jobsetting
+        if thread_num<=0:
+            thread_num = job.thread_num
+            
+    def convertRulesToPageInfos(self, get_rules="",placeholders={}):
+        page_infos = []
+        jobpath = []
+        #替换规则中的占位符
+        if len(get_rules)>0:
+            for placeholder_key in placeholders:
+                get_rules = get_rules.replace("{{"+placeholder_key+"}}", placeholders[placeholder_key])
+            exec(get_rules)
+            jobpath = eval("jobpath")
+        #将抓取规则转换为对象
+        for path in jobpath:
+            #页面信息
+            page_info = PageInfo()
+            page_info.urls = path.get("urls", [])
+            page_info.encoding = path.get("encoding", "")
+            page_info.is_need_loop = path.get("is_need_loop", "")
+            page_info.loop_url = path.get("loop_url", "")
+            page_info.description = path.get("description", "")
+            page_info.is_end = path.get("is_end", "")
+            page_info.output_keys = path.get("output_keys", "")
+            #正则匹配
+            regular_matchs = []
+            temp_regular_matchs = path.get("regular_matchs", [])
+            if temp_regular_matchs is not None:
+                for temp_regular_match in temp_regular_matchs:
+                    regular_match = RegularMatch()
+                    regular_match.result = temp_regular_match.get("result", "")
+                    regular_match.is_unique = temp_regular_match.get("is_unique", "")
+                    regular_match.is_scroll = temp_regular_match.get("is_scroll", "")
+                    regular_match.omit_tags = temp_regular_match.get("omit_tags", "")
+                    regular_match.regulars = temp_regular_match.get("regulars", [])
+                    regular_matchs.append(regular_match)
+            page_info.regular_matchs = regular_matchs
+            #块匹配
+            block_match = None
+            temp_block_match = path["block_match"]
+            if temp_block_match is not None:
+                block_match = BlockMatch()
+                block_match.result = temp_block_match.get("result", "")
+                block_match.start_str = temp_block_match.get("start_str", "")
+                block_match.end_str = temp_block_match.get("end_str", "")
+            page_info.block_match = block_match
+            page_infos.append(page_info)
+        return page_infos
+    
+    def startscan(self, job_id, job_name="", get_rules="",placeholders={}, thread_num=0):
+        #
+        self.job_id = job_id
+        #
+        self.cleanParams(job_name, get_rules, placeholders, thread_num)
+        #扫描开始，设置数据库状态
+        scan = Scan(job_id=job_id, job_name=job_name, get_rules=get_rules, placeholders=placeholders, scan_start=datetime.datetime.now(), scan_end=datetime.datetime.now(), thread_num=thread_num)
+        scan.save()
+        self.scan_id = scan.id
+        #
+        self.jobpath = self.convertRulesToPageInfos(get_rules, placeholders)
         
         runtime_status = {}
         #启动抓取线程，线程处于ready状态
@@ -532,7 +582,7 @@ class Grabber(object):
         outputfile.close()
         #将结果输出到文件
         for i in range(0,1):
-            t = OutputFileScanResult(threadname="OutputFileScanResult_"+str(i), scan_id=self.dbpt.scan_id, output_queue=self.output_queue)
+            t = OutputFileScanResult(threadname="OutputFileScanResult_"+str(i), scan_id=self.scan_id, output_queue=self.output_queue)
             t.setDaemon(True)
             t.start()            
         
@@ -548,14 +598,17 @@ class Grabber(object):
         line = outputfile.readline()    # 调用文件的 readline()方法
         while line:
             from gather.job.models import ScanResult
-            scanResult = ScanResult(scan_id=self.dbpt.scan_id, scan_result=line.strip('\n'))
+            scanResult = ScanResult(scan_id=self.scan_id, scan_result=line.strip('\n'))
             scanResult.save()
             print line.strip('\n')
             line = outputfile.readline()
         outputfile.close()
         
-        #
-        self.dbpt.finishscan()
+        #完成扫描，设置数据库状态
+        scan = Scan.objects.get(pk=self.scan_id)
+        scan.scan_end=datetime.datetime.now()
+        scan.is_finish = '1'
+        scan.save()
         print "finish"
         
         return
@@ -567,11 +620,11 @@ if __name__ == "__main__":
 #     getUrlContent('http://sr.ju690.cn?orderby=new&dismode=discuss&day=7&p=page2')
     src = '<div class="star clearfix"><span class="allstar45"></span><span class="rating_nums">8.4</span><span class="pl">(293人评价)</span></div>'
     print src
-    src = removetag(src,"span")
+    src = remove_tag(src,"span")
     print src
-    src = removetag(src,"/span")
+    src = remove_tag(src,"/span")
     print src
-    src = removetag(src,"div")
+    src = remove_tag(src,"div")
     print src
 
     
