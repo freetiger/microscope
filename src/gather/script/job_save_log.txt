@@ -1,8 +1,8 @@
 科学松鼠会-原创标题链接	{"offset":"1", "limit":"1", "step":"1", }	1	2015-01-01 00:31:05
 #start
-jobpath = []
+page_info_list = []
 
-jobpath.append({
+page_info_list.append({
         "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
         "regular_matchs":[{        
         "result":"nextPageUrl",
@@ -12,12 +12,12 @@ jobpath.append({
        "block_match":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
        "encoding":"UTF-8",
        "is_need_loop":"1",
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
-       "loop_url":["${nextPageUrl1}",],
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_urls":["${nextPageUrl1}",],
        "job_description":"科学松鼠会-原创列表"
     })
 
-jobpath.append({
+page_info_list.append({
     "urls":['inline:///${comblock}',],
     "regular_matchs":[{        
         "result":"title",
@@ -26,19 +26,19 @@ jobpath.append({
         },],
    "encoding":"UTF-8",
    "is_need_loop":"0",
-   "loop_url":[],
+   "loop_urls":[],
    "job_description":"科学松鼠会-原创标题链接"
 })
 
-jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
 #end
 
 
 豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1", }	1	2015-01-02 23:59:31
 #start
-jobpath = []
+page_info_list = []
 
-jobpath.append({
+page_info_list.append({
         "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
         "regular_matchs":[{        
         "result":"nextPageUrl",
@@ -48,12 +48,12 @@ jobpath.append({
        "block_match":{"start_str":'<body>',"end_str":'</body>',"result":"comblock"},
        "encoding":"UTF-8",
        "is_need_loop":"1",
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
-       "loop_url":["${nextPageUrl1}",],
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_urls":["${nextPageUrl1}",],
        "job_description":"豆瓣：音乐标签：摇滚"
     })
 
-jobpath.append({
+page_info_list.append({
     "urls":['inline:///${comblock}',],
     "regular_matchs":[{        
         "result":"title",
@@ -62,22 +62,22 @@ jobpath.append({
         },],
    "encoding":"UTF-8",
    "is_need_loop":"0",
-   "loop_url":[],
+   "loop_urls":[],
    "job_description":"豆瓣：音乐标签：摇滚"
 })
 
-jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
 #end
 
 
 豆瓣：音乐标签：摇滚		1	None
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
@@ -97,9 +97,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -107,7 +107,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -125,7 +125,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -133,18 +133,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title",]})
+page_info_list.append({"is_end":"1","output_keys":["title",]})
 
 #end
 
 豆瓣：音乐标签：摇滚		1	None
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
@@ -164,9 +164,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -174,7 +174,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -192,7 +192,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -200,18 +200,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
 
 #end
 
 豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
@@ -231,9 +231,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -241,7 +241,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -259,7 +259,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -267,18 +267,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
 
 #end
 
 豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
@@ -298,9 +298,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -308,7 +308,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -326,7 +326,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -334,18 +334,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title",]})
+page_info_list.append({"is_end":"1","output_keys":["title",]})
 
 #end
 
 豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
@@ -365,9 +365,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -375,7 +375,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -393,7 +393,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -401,18 +401,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title*",]})
+page_info_list.append({"is_end":"1","output_keys":["title*",]})
 
 #end
 
 豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
@@ -432,9 +432,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -442,7 +442,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -460,7 +460,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -468,18 +468,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title*",]})
+page_info_list.append({"is_end":"1","output_keys":["title*",]})
 
 #end
 
 豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
@@ -499,9 +499,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -509,7 +509,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -527,7 +527,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -535,18 +535,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title*",]})
+page_info_list.append({"is_end":"1","output_keys":["title*",]})
 
 #end
 
 豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
@@ -566,9 +566,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -576,7 +576,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -594,7 +594,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -602,18 +602,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
 
 #end
 
 豆瓣：音乐标签：摇滚	{"offset":"1", "limit":"1", "step":"1"}	1	2015-01-07 12:17:43
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://music.douban.com/tag/%E6%91%87%E6%BB%9A',],
 
@@ -633,9 +633,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -643,7 +643,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -661,7 +661,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"豆瓣：音乐标签：摇滚"
 
@@ -669,18 +669,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title*",]})
+page_info_list.append({"is_end":"1","output_keys":["title*",]})
 
 #end
 
 科学松鼠会-原创标题链接	{"offset":"1", "limit":"3", "step":"1"}	1	2014-11-10 11:25:48
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
 
@@ -700,9 +700,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"科学松鼠会-原创列表"
 
@@ -710,7 +710,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -728,7 +728,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"科学松鼠会-原创标题链接"
 
@@ -736,7 +736,7 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
 
 #end
 
@@ -744,11 +744,11 @@ jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
 科学松鼠会-原创标题链接	{"offset":"1", "limit":"1", "step":"1"}	1	2014-11-10 11:25:48
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
 
@@ -768,9 +768,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"科学松鼠会-原创列表"
 
@@ -778,7 +778,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -796,7 +796,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"科学松鼠会-原创标题链接"
 
@@ -804,18 +804,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
 
 #end
 
 科学松鼠会-原创标题链接	{"offset":"1", "limit":"1", "step":"1"}	1	2014-11-10 11:25:48
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
 
@@ -835,9 +835,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"科学松鼠会-原创列表"
 
@@ -845,7 +845,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -863,7 +863,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"科学松鼠会-原创标题链接"
 
@@ -871,18 +871,18 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
 
 #end
 
 科学松鼠会-原创标题链接	{"offset":"1", "limit":"1", "step":"1"}	1	2014-11-10 11:25:48
 #start
 
-jobpath = []
+page_info_list = []
 
 
 
-jobpath.append({
+page_info_list.append({
 
         "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
 
@@ -902,9 +902,9 @@ jobpath.append({
 
        "is_need_loop":"1",
 
-       "loopset":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
 
-       "loop_url":["${nextPageUrl1}",],
+       "loop_urls":["${nextPageUrl1}",],
 
        "job_description":"科学松鼠会-原创列表"
 
@@ -912,7 +912,7 @@ jobpath.append({
 
 
 
-jobpath.append({
+page_info_list.append({
 
     "urls":['inline:///${comblock}',],
 
@@ -930,7 +930,7 @@ jobpath.append({
 
    "is_need_loop":"0",
 
-   "loop_url":[],
+   "loop_urls":[],
 
    "job_description":"科学松鼠会-原创标题链接"
 
@@ -938,7 +938,208 @@ jobpath.append({
 
 
 
-jobpath.append({"is_end":"1","output_keys":["title1","title2",]})
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
+
+#end
+
+科学松鼠会-原创标题链接	{"offset":"1", "limit":"1", "step":"1", }	1	2015-01-01 00:31:05
+#start
+
+page_info_list = []
+
+
+
+page_info_list.append({
+
+        "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+        "regulars":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_match":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_urls":["${nextPageUrl1}",],
+
+       "job_description":"科学松鼠会-原创列表"
+
+    })
+
+
+
+page_info_list.append({
+
+    "urls":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regulars":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_urls":[],
+
+   "job_description":"科学松鼠会-原创标题链接"
+
+})
+
+
+
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
+
+#end
+
+科学松鼠会-原创标题链接	{"offset":"1", "limit":"1", "step":"1", }	1	2015-01-01 00:31:05
+#start
+
+page_info_list = []
+
+
+
+page_info_list.append({
+
+        "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+        "regulars":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_match":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_urls":["${nextPageUrl1}",],
+
+       "job_description":"科学松鼠会-原创列表"
+
+    })
+
+
+
+page_info_list.append({
+
+    "urls":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regulars":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+
+        "is_unique":"0",
+        "encoding":"UTF-8",
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_urls":[],
+
+   "job_description":"科学松鼠会-原创标题链接"
+
+})
+
+
+
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
+
+#end
+
+科学松鼠会-原创标题链接	{"offset":"1", "limit":"1", "step":"1", }	1	2015-01-01 00:31:05
+#start
+
+page_info_list = []
+
+
+
+page_info_list.append({
+
+        "urls":['http://songshuhui.net/archives/tag/%E5%8E%9F%E5%88%9B',],
+
+        "regular_matchs":[{        
+
+        "result":"nextPageUrl",
+
+        "regulars":['<a class="nextpostslink" href="([^"]*)"[^>]*>[^<]*</a>',],
+
+        "is_unique":"1",
+
+        }, ],
+
+       "block_match":{"start_str":'<html>',"end_str":'</html>',"result":"comblock"},
+
+       "encoding":"UTF-8",
+
+       "is_need_loop":"1",
+
+       "loop_info":{"offset":"{{offset}}", "limit":"{{limit}}", "step":"{{step}}", },
+
+       "loop_urls":["${nextPageUrl1}",],
+
+       "job_description":"科学松鼠会-原创列表"
+
+    })
+
+
+
+page_info_list.append({
+
+    "urls":['inline:///${comblock}',],
+
+    "regular_matchs":[{        
+
+        "result":"title",
+
+        "regulars":['<h3 class="storytitle"><a class="black" href="([^"]*)"[^>]*>([^<]*)</a></h3>',],
+
+        "is_unique":"0",
+
+        },],
+
+   "encoding":"UTF-8",
+
+   "is_need_loop":"0",
+
+   "loop_urls":[],
+
+   "job_description":"科学松鼠会-原创标题链接"
+
+})
+
+
+
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
 
 #end
 

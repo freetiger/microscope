@@ -34,7 +34,7 @@ class PageInfo(models.Model):
     block_match = models.ForeignKey(BlockMatch)   #
     encoding = models.CharField(max_length=32, verbose_name='页面编码')
     is_need_loop = models.BooleanField(default=True, verbose_name='需要循环')
-    loop_url = models.CharField(max_length=1024, verbose_name='循环URL')
+    loop_urls = models.CharField(max_length=1024, verbose_name='循环URL')
     description = models.CharField(max_length=32, verbose_name='页面描述')
     is_end = models.BooleanField(default=True, verbose_name='结束抓取') #是否结束抓取，输出结果
     output_keys = models.CharField(max_length=1024, verbose_name='输出的结果')#需要输出的结果

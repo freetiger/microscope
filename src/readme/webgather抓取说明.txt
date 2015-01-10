@@ -1,9 +1,9 @@
 webgather抓取规则以列表的形式保存
 抓取引擎按顺序执行规则列表中的规则
 如：
-jobpath = []
+page_info_list = []
 
-jobpath.append({
+page_info_list.append({
     	"urls":['http://search.china.alibaba.com/search/company_search.htm?province=广东省&city=佛山',],
         "regular_matchs":[{		
 		"result":"nsurl",
@@ -13,12 +13,12 @@ jobpath.append({
        "block_match":{"start_str":'<div class="content">\n<div class="info">',"end_str":'<div class="content">\n<div class="info">',"result":"comblock"},
        "encoding":"GBK",
        "is_need_loop":"1",
-       "loop_url":["${nsurl1}",],
+       "loop_urls":["${nsurl1}",],
        "job_description":"阿里巴巴-佛山"
 	})
 
 
-jobpath.append({
+page_info_list.append({
     	"urls":['inline:///${comblock}',],
 	"regular_matchs":[{		
 		"result":"qsurl",
@@ -36,11 +36,11 @@ jobpath.append({
 		],
        "encoding":"UTF-8",
        "is_need_loop":"0",
-       "loop_url":[],
+       "loop_urls":[],
        "job_description":"阿里巴巴-佛山"
 	})
 
-jobpath.append({
+page_info_list.append({
     	"urls":['${lxurl1}',],
 	"regular_matchs":[{		
 		"result":"lxr",
@@ -59,12 +59,12 @@ jobpath.append({
 		],
        "encoding":"GBK",
        "is_need_loop":"0",
-       "loop_url":[],
+       "loop_urls":[],
        "job_description":"阿里巴巴-佛山"
 	})
 
 
-jobpath.append({
+page_info_list.append({
         "urls":["http://china.alibaba.com/company/detail/intro/${qsurl2}.html",],        
 	"regular_matchs":[{		
 		"result":"brief",
@@ -83,11 +83,11 @@ jobpath.append({
 		],
        "encoding":"GBK",
        "is_need_loop":"0",
-       "loop_url":[],
+       "loop_urls":[],
        "job_description":"阿里巴巴-佛山"
 	})
 
-jobpath.append({
+page_info_list.append({
     	"urls":["http://${qsurl2}.cn.alibaba.com/athena/bizreflist/${qsurl2}.html",],
 	"regular_matchs":[{		
 		"result":"etsecond",
@@ -100,14 +100,14 @@ jobpath.append({
 		],
        "encoding":"GBK",
        "is_need_loop":"0",
-       "loop_url":[],
+       "loop_urls":[],
        "callprint":"1",
        "job_description":"阿里巴巴-佛山"
 	})
 
 
    
-jobpath.append({"is_end":"1","output_keys":["brief","sbrief","qsurl3","etsecond","qsurl1","$albb","lxr1","lxstr"]})
+page_info_list.append({"is_end":"1","output_keys":["brief","sbrief","qsurl3","etsecond","qsurl1","$albb","lxr1","lxstr"]})
 
 定义了六层规则，引擎按照顺序从第一层开始，一步一步进行解析抓取
 例子中的六层分别是：
@@ -120,7 +120,7 @@ jobpath.append({"is_end":"1","output_keys":["brief","sbrief","qsurl3","etsecond"
 			}, ],
 		这个正则表达式组定义了一个正则表达式，'<a  onmousedown="[^"]*"  href="([^"]*)" [^>]*>下一页</a>'，结果用"result":"nsurl",命名
 		这个结果会在随后的"is_need_loop":"1",
-				  "loop_url":["${nsurl1}",],
+				  "loop_urls":["${nsurl1}",],
 		中使用，is_need_loop说明这个页面需要循环抓取，下一个抓取页面由前一次抓取到的"${nsurl1}"值决定，这个值就是前面正则表达式匹配的结果
 	二、"block_match":{"start_str":'<div class="content">\n<div class="info">',"end_str":'<div class="content">\n<div class="info">',"result":"comblock"},
 	    这个规则提取了页面中从'<div class="content">\n<div class="info">'开始，到'<div class="content">\n<div class="info">'结束的一段html代码
