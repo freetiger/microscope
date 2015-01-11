@@ -26,6 +26,7 @@ class GolbeSetting(object):
     #menu_style = 'accordion' 
     apps_label_title = {  
            'job':u'数据收集',
+           'rule':u'规则设置',
            'auth':u'用户权限',
            'reversion':u'操作记录',
     }  

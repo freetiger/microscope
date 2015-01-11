@@ -60,8 +60,9 @@ class Job(models.Model):
         
     def save(self):
         from microscope.settings import BASE_DIR
-        job_save_log = BASE_DIR+"/gather/script/job_save_log.txt"
+        job_save_log = BASE_DIR+"/gather/script/job_save_log.py"
         outputfile = open(job_save_log,"a")
+        outputfile.write("#") 
         outputfile.write(self.job_name) 
         outputfile.write("\t")
         outputfile.write(self.placeholders)

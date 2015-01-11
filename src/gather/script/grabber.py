@@ -148,8 +148,8 @@ class Grabber(object):
                 loop_info.offset = temp_loop_info.get("offset", "1")
                 loop_info.limit = temp_loop_info.get("limit", "0")
                 loop_info.step = temp_loop_info.get("step", "1")
-                loop_info.is_need_loop = path.get("is_need_loop", "1")
-                loop_info.loop_urls = path.get("loop_urls", [])
+                loop_info.is_need_loop = temp_loop_info.get("is_need_loop", "1")
+                loop_info.loop_urls = temp_loop_info.get("loop_urls", [])
             page_info.loop_info = loop_info
             #
             page_infos.append(page_info)

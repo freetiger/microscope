@@ -22,16 +22,16 @@ result：正则匹配出的结果的名称，result1引用第一个结果，resu
 class RegularMatch(object):
     result = "" #models.CharField(max_length=32, verbose_name='结果名称')
     regulars = []   #models.CharField(max_length=1024, verbose_name='正则表达式') #[]
-    is_unique = 0   #models.BooleanField(default=True, verbose_name='唯一结果') #0表示抓全部的结果，这个值是1的话，只取第一个结果
-    is_scroll = 1   #models.BooleanField(default=True, verbose_name='是否卷起') #"1",表示将抓取结果用||符号连接起来，生成一个整个的字符串，并用${lxstr}表示,这时不需加上表明位置的数字1
+    is_unique = "0"   #models.BooleanField(default=True, verbose_name='唯一结果') #0表示抓全部的结果，这个值是1的话，只取第一个结果
+    is_scroll = "0"   #models.BooleanField(default=True, verbose_name='是否卷起') #"1",表示将抓取结果用||符号连接起来，生成一个整个的字符串，并用${lxstr}表示,这时不需加上表明位置的数字1
     omit_tags = []    #models.CharField(max_length=1024, verbose_name='去除标记')#去除HTML标记，只保留内容： ['font','/font']表示匹配前过滤掉'font','/font'两个tag
   
 class LoopInfo(object):  
-    is_need_loop = 0    #models.BooleanField(default=True, verbose_name='需要循环')
+    is_need_loop = "0"    #models.BooleanField(default=True, verbose_name='需要循环')
     loop_urls = []  #models.CharField(max_length=1024, verbose_name='循环URL')
-    offset = ""
-    limit = ""
-    step = ""
+    offset = "1"  #计数起点为1，第一个值下标为1
+    limit = "0"
+    step = "1"
 
 class PageInfo(object):
     urls = []   #models.TextField(verbose_name='页面URL/源码')    #[]
@@ -39,7 +39,7 @@ class PageInfo(object):
     block_match = None  #models.ForeignKey(BlockMatch)   #
     encoding = "GBK"   #models.CharField(max_length=32, verbose_name='页面编码')
     description = ""    #models.CharField(max_length=32, verbose_name='页面描述')
-    is_end = 0  #models.BooleanField(default=True, verbose_name='结束抓取') #是否结束抓取，输出结果
+    is_end = "0"  #models.BooleanField(default=True, verbose_name='结束抓取') #是否结束抓取，输出结果
     output_keys = []    #models.CharField(max_length=1024, verbose_name='输出的结果')#需要输出的结果
     loop_info = None
     post_datas = {}  #url 请求post的数据
