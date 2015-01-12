@@ -36,8 +36,7 @@ def gen_list_page(base_url, page_total=1):
         list_page = list_page+";"+base_url+str(index+1)
     return list_page
 
-def scan_weixin_public():
-    job_id = 5
+def scan_weixin_public(job_id, openid):
     job = Job.objects.get(pk=job_id)
     if job is not None:
         job_name = job.job_name
@@ -45,7 +44,7 @@ def scan_weixin_public():
         placeholders = {}
         thread_num = 1
         #
-        base_url = "http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid=oIWsFt-Atb62Noyz4nKX1nvrmFHQ&page="
+        base_url = "http://weixin.sogou.com/gzhjs?cb=sogou.weixin.gzhcb&openid="+openid+"&page="
         list_page = gen_list_page(base_url, get_page_total())
         print "list_page="+list_page
         print "toalt="+str(get_page_total())

@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^(?P<job_id>\d+)/$', views.detail, name='detail'),
     # ex: /polls/5/results/
     url(r'^(?P<job_id>\d+)/results/$', views.results, name='results'),
+    url(r'^run_weixin_scan/(?P<weixin_scan_id>\d+)/$', views.runWeixinScan, name='run_weixin_scan'),
     # ex: /polls/5/vote/
 #     url(r'^(?P<poll_id>\d+)/vote/$', views.vote, name='vote'),
 )

@@ -8,7 +8,7 @@ from django.utils.importlib import import_module
 import xadmin
 from xadmin.views.base import CommAdminView
 
-from gather.job.models import Job, Scan, ScanResult
+from gather.job.models import Job, Scan, ScanResult, WeixinScan
 
 
 # from xadmin.plugins.inline import Inline
@@ -82,10 +82,23 @@ class ScanResultAdmin(BaseAdmin):
     #search_fields = ('job_name',)
     list_filter = ('scan', )
     ordering = ('pk',)
+    
+#微信列表
+class WeixinScanAdmin(BaseAdmin):
+    list_display = ('article_title_scan', 'weixin_name', 'weixin_no', 'openid', 'create_date', )
+    #设置搜索框和其模糊搜索的范围
+    search_fields = ('article_title_scan', 'weixin_name', 'weixin_no', 'openid',) 
+#     list_display_links = ('create_date',)
+    show_detail_fields = ('weixin_name', )
+    #操作列表
+    list_operate=['<a href="/job/run_weixin_scan/{{pk}}/" target="_blank">执行</a>'
+                  , '<a href="/job/scan/?_p_job__id__exact={{article_title_scan_id}}">扫描日志</a>', ]
+    list_editable = ('openid', )
 
 xadmin.site.register(Job, JobAdmin)
 xadmin.site.register(Scan, ScanAdmin)
 xadmin.site.register(ScanResult, ScanResultAdmin)
+xadmin.site.register(WeixinScan, WeixinScanAdmin)
 
 #自定义插件导入   
 import_module('plugins.operatelist')

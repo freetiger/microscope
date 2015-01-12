@@ -9,8 +9,9 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404
+from django.http import HttpResponse
 
-from gather.job.models import Job
+from gather.job.models import Job, WeixinScan
 
 from gather.job.forms import RunJobForm
 from django.shortcuts import render_to_response
@@ -80,3 +81,20 @@ def runJobForm(request, job_id):
         else:
             form = RunJobForm()
     return render_to_response('gather/job/run_job_form.html', {'form': form, 'base_template': 'xadmin/base.html'})
+
+
+def runWeixinScan(request, weixin_scan_id):
+    weixinScan = WeixinScan.objects.get(pk=weixin_scan_id)
+    weixin_name = weixinScan.weixin_name
+    if weixin_name is None or weixin_name.strip()=="":
+        weixin_name = weixinScan.weixin_no
+    if weixin_name is None or weixin_name.strip()=="":
+        weixin_name = weixinScan.openid
+    html = "<html><body>%s 扫描结束.</body></html>" % weixin_name
+    #
+    from gather.script.weixin_public import scan_weixin_public
+    scan_weixin_public(weixinScan.article_title_scan_id, weixinScan.openid)
+    return HttpResponse(html)
+
+
+

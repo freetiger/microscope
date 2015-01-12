@@ -107,3 +107,21 @@ class ScanResult(models.Model):
         ordering = ['scan']
         verbose_name='扫描结果' 
         verbose_name_plural='扫描结果'
+        
+        
+class WeixinScan(models.Model):
+    article_title_scan = models.ForeignKey(Job)
+    weixin_name = models.CharField(max_length=256, verbose_name='微信名')
+    weixin_no = models.CharField(max_length=256, verbose_name='微信号')
+    openid = models.CharField(max_length=256, verbose_name='微信openid')
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='创建日期')
+    
+    def __unicode__(self):
+        return self.weixin_name
+    
+    class Meta:
+        ordering = ['-create_date']
+        verbose_name='微信列表' 
+        verbose_name_plural='微信列表'
+    
+    
