@@ -4,7 +4,7 @@ from Queue import Queue
 import datetime
 import re
 import threading
-import urllib2, cookielib, urllib
+import utils
 
 from gather.job.models import Job, Scan
 from gather.script.models import PageInfo, BlockMatch, RegularMatch, LoopInfo
@@ -216,14 +216,14 @@ class GatherWorker(threading.Thread):
                 return ""
             else:
                 source = source.replace('${'+items+'}',str(runtime_status[items]))
+        #eval执行
+        param_retrieve_str = re.compile(r'\$eval\{([^}]*)\}')
+        params = param_retrieve_str.findall(source)
+        for items in params:
+            source = source.replace('$eval{'+items+'}',str(eval(items)))
         return source     
     
-    '''
-    URL特殊字符转义
-    '''            
-    def urlzhuanyi(self, in_url):
-        in_url = in_url.replace("&amp;","&")    
-        return in_url
+
     
     '''
             移除字符串中的html标签
@@ -242,76 +242,6 @@ class GatherWorker(threading.Thread):
             instr = instr.replace(tagstr,"")
             
         return instr
-    
-    '''
-            获得inUrl请求数据的结果htmlsrc
-    inUrl：请求链接
-    post_datas：post数据
-    inUrl前缀做判断：如果是文件则读取文件内容返回，如果是文本内容则直接返回该内容，如果是url则返回该url应答页面的内容。
-    '''
-    def getUrlContent(self, inUrl,post_datas={}):
-        cj = cookielib.CookieJar()
-        opener = urllib2.build_opener(
-                urllib2.HTTPCookieProcessor(cj),
-                HTTPRefererProcessor(),
-            )
-        urllib2.install_opener(opener)
-            
-        if len(inUrl)==0:
-            #print "get blank url"
-            return ""
-        inUrl = self.urlzhuanyi(inUrl)
-               
-        if inUrl.startswith("file:///"):
-            tmp_file = open(inUrl[8:],"r")
-            filesrc = tmp_file.read()
-            tmp_file.close()
-            print "request: "+str(inUrl)
-            return filesrc
-        elif inUrl.startswith("inline:///"):
-            return inUrl[10:]
-           
-        tpnum = 5    #url请求出错时重试多次（5次）
-        headers = {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language":"zh-cn,zh;q=0.5",
-            "Accept-Charset":"gb2312,utf-8;q=0.7,*;q=0.7",
-            "Connection": "Keep-Alive",
-            "Cache-Control": "no-cache",
-            "Cookie":"skin=noskin; path=/; domain=.amazon.com; expires=Wed, 25-Mar-2009 08:38:55 GMT\r\nsession-id-time=1238569200l; path=/; domain=.amazon.com; expires=Wed Apr 01 07:00:00 2009 GMT\r\nsession-id=175-6181358-2561013; path=/; domain=.amazon.com; expires=Wed Apr 01 07:00:00 2009 GMT"
-        }
-    
-        req=urllib2.Request(inUrl,headers=headers) #伪造request的header头，有些网站不支持，会拒绝请求;有些网站必须伪造header头才能访问
-        htmlsrc = ""
-        while len(htmlsrc)==0 and tpnum>0:
-            try:
-                print "request: "+str(inUrl)
-                #page = mgr.open(req)
-                import socket
-                s=socket.socket()
-                socket.setdefaulttimeout(25)
-                s.setblocking(0)
-                try:
-                    resp = None
-                    if post_datas:
-                        url_data = urllib.urlencode(post_datas)
-                        resp = urllib2.urlopen(req, url_data)   #inUrl
-                    else:
-                        print inUrl
-                        resp = urllib2.urlopen(req)
-    
-                    htmlsrc =resp.read()                
-                    tpnum = 0
-                except:
-                    print "request time out",tpnum
-                    htmlsrc = ""
-                    tpnum = tpnum - 1
-            except urllib2.URLError,err:
-                print err
-                return None
-        return htmlsrc
     
     '''
             移除html标签，特别的：br标签替换成一个空格
@@ -358,18 +288,21 @@ class GatherWorker(threading.Thread):
             start_str = block_match.start_str
             end_str = block_match.end_str
             result = block_match.result
-            tmp_src = page_src.replace("\n","").replace("\r","")
-            
-            b_pos = tmp_src.find(start_str)
-            block_num = 0
-            while b_pos >= 0:
-                block_num += 1
-                e_pos = tmp_src.find(end_str,b_pos+len(start_str))
-                block_data_map_list.append({result:tmp_src[b_pos:e_pos]})
-                if e_pos>=0:
-                    b_pos = tmp_src.find(start_str,e_pos)
-                else: #未找到结束块e_pos为负值，跳出while循环
-                    b_pos = e_pos
+            if start_str.strip()=="" or end_str.strip()=="":
+                block_data_map_list.append({result:page_src})
+                block_num=1
+            else:
+                tmp_src = page_src.replace("\n","").replace("\r","")
+                b_pos = tmp_src.find(start_str)
+                block_num = 0
+                while b_pos >= 0:
+                    block_num += 1
+                    e_pos = tmp_src.find(end_str,b_pos+len(start_str))
+                    block_data_map_list.append({result:tmp_src[b_pos:e_pos]})
+                    if e_pos>=0:
+                        b_pos = tmp_src.find(start_str,e_pos)
+                    else: #未找到结束块e_pos为负值，跳出while循环
+                        b_pos = e_pos
             print  result,block_num
         if len(block_data_map_list) == 0:
             block_data_map_list =[{}]   #默认一块
@@ -388,7 +321,7 @@ class GatherWorker(threading.Thread):
             page_encoding = page_info.encoding
         #
         raw_url = raw_url.decode("UTF-8","ignore").encode(page_encoding,"ignore")
-        page_src = self.getUrlContent(raw_url,post_datas)
+        page_src = utils.getUrlContent(raw_url,post_datas)
         #
         if page_encoding == "unicode":
             page_src = eval("u'"+page_src+"'").encode('utf-8',"ignore")
@@ -485,7 +418,7 @@ class GatherWorker(threading.Thread):
             return
         #所有的抓取规则都执行了，或者遇到终止标识，提前终止抓取。根据规则将结果存入output_queue.
         if parse_step >= len(self.page_info_list)-1 or self.page_info_list[parse_step].is_end == "1":
-            self.outputvalues(self.page_info_list[parse_step].output_keys,runtime_status)
+            self.outputvalues(self.page_info_list[len(self.page_info_list)-1].output_keys,runtime_status)
             return
             
         page_info = self.page_info_list[parse_step]
@@ -518,12 +451,12 @@ class GatherWorker(threading.Thread):
                 lastUrl = ""
                 while hasNext:            
                     status_list = [{}]
-                    offset_str = loop_info.offset
+                    offset_str = "offset"
                     limit = int(loop_info.limit)
                     step = int(loop_info.step)
                     print loop_info,limit
                     if offset_str not in next_status:
-                        next_status[offset_str] = '1'
+                        next_status[offset_str] = "1"
                     next_status[offset_str] = str(step + int(next_status[offset_str]))
                     offset = next_status[offset_str]
                     next_status[offset_str] = offset
@@ -540,7 +473,7 @@ class GatherWorker(threading.Thread):
                         hasNext = False
                     else:
                         lastUrl = next_url
-                        status_list = self.parse_page_data(next_url,page_info,runtime_status)                    
+                        status_list = self.parse_page_data(next_url,page_info,runtime_status)                
                         #解析结果status_list和解析时的中间结果runtime_status合并，并将合并的结果用于下一步的解析
                         for tmp_status in status_list:
                             if type(tmp_status) == type({}):
@@ -575,44 +508,10 @@ class OutputFileScanResult(threading.Thread):
             self.outputfile.write("\n")
             self.outputfile.close()
             self.sharedata.task_done()
-        
-class HTTPRefererProcessor(urllib2.BaseHandler):
-    def __init__(self):
-        self.referer = None
-    
-    def http_request(self, request):
-        if ((self.referer is not None) and
-            not request.has_header("Referer")):
-            request.add_unredirected_header("Referer", self.referer)
-        return request
-
-    def http_response(self, request, response):
-        self.referer = response.geturl()
-        return response
-        
-    https_request = http_request
-    https_response = http_response
-
-    
-
-class ErrorHandler(urllib2.HTTPDefaultErrorHandler):  
-    def http_error_default(self, req, fp, code, msg, headers):  
-        result = urllib2.HTTPError(req.get_full_url(), code, msg, headers, fp)  
-        result.status = code  
-        return result
-    
 
 if __name__ == "__main__":   
-#     print "just import it"
-#     getUrlContent('http://sr.ju690.cn?orderby=new&dismode=discuss&day=7&p=page2')
-    src = '<div class="star clearfix"><span class="allstar45"></span><span class="rating_nums">8.4</span><span class="pl">(293人评价)</span></div>'
-    print src
-    src = GatherWorker().remove_tag(src,"span")
-    print src
-    src = GatherWorker().remove_tag(src,"/span")
-    print src
-    src = GatherWorker().remove_tag(src,"div")
-    print src
+    pass
+    
 
     
     

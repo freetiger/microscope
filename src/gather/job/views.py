@@ -62,6 +62,8 @@ def runJobForm(request, job_id):
             placeholders = eval(form.get("placeholders", ""))
             thread_num = int(form.get("thread_num", 1))
             Grabber().startscan(job_id=job_id, job_name=job_name, get_rules=get_rules, placeholders=placeholders, thread_num=thread_num)
+            #from gather.script.weixin_public import scan_weixin_public
+            #scan_weixin_public()
             return HttpResponseRedirect('/job')
     else:
         job = Job.objects.get(pk=job_id)
