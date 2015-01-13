@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import Http404
 from django.http import HttpResponse
 
-from gather.job.models import Job, WeixinScan
+from gather.job.models import Job, WeixinArticleListScan, WeixinArticleContentScan, WeixinArticle
 
 from gather.job.forms import RunJobForm
 from django.shortcuts import render_to_response
@@ -63,8 +63,8 @@ def runJobForm(request, job_id):
             placeholders = eval(form.get("placeholders", ""))
             thread_num = int(form.get("thread_num", 1))
             Grabber().startscan(job_id=job_id, job_name=job_name, get_rules=get_rules, placeholders=placeholders, thread_num=thread_num)
-            #from gather.script.weixin_public import scan_weixin_public
-            #scan_weixin_public()
+            #from gather.script.weixin_public import scan_article_list
+            #scan_article_list()
             return HttpResponseRedirect('/job')
     else:
         job = Job.objects.get(pk=job_id)
@@ -83,18 +83,41 @@ def runJobForm(request, job_id):
     return render_to_response('gather/job/run_job_form.html', {'form': form, 'base_template': 'xadmin/base.html'})
 
 
-def runWeixinScan(request, weixin_scan_id):
-    weixinScan = WeixinScan.objects.get(pk=weixin_scan_id)
-    weixin_name = weixinScan.weixin_name
+def runWeixinArticleListScan(request, weixin_scan_id):
+    weixinArticleListScan = WeixinArticleListScan.objects.get(pk=weixin_scan_id)
+    weixin_info = weixinArticleListScan.weixin_info
+    weixin_name = weixin_info.weixin_name
     if weixin_name is None or weixin_name.strip()=="":
-        weixin_name = weixinScan.weixin_no
+        weixin_name = weixin_info.weixin_no
     if weixin_name is None or weixin_name.strip()=="":
-        weixin_name = weixinScan.openid
+        weixin_name = weixin_info.openid
     html = "<html><body>%s 扫描结束.</body></html>" % weixin_name
     #
-    from gather.script.weixin_public import scan_weixin_public
-    scan_weixin_public(weixinScan.article_title_scan_id, weixinScan.openid)
+    from gather.script.weixin_public import scan_article_list
+    scan_article_list(weixinArticleListScan.job_id, weixin_info.openid)
     return HttpResponse(html)
+
+def runWeixinArticleContentScan(request, weixin_scan_id):
+    weixinArticleContentScan = WeixinArticleContentScan.objects.get(pk=weixin_scan_id)
+    weixin_info = weixinArticleContentScan.weixin_info
+    weixin_name = weixin_info.weixin_name
+    if weixin_name is None or weixin_name.strip()=="":
+        weixin_name = weixin_info.weixin_no
+    if weixin_name is None or weixin_name.strip()=="":
+        weixin_name = weixin_info.openid
+    html = "<html><body>%s 扫描结束.</body></html>" % weixin_name
+    #
+    from gather.script.weixin_public import scan_article_content
+    scan_article_content(weixinArticleContentScan.job_id, weixinArticleContentScan.weixin_article_list_scan_id)
+    return HttpResponse(html)
+
+def testWeixinArticleShow(request):
+    context = {}
+    return render(request, 'gather/job/wenzhang.html', context)
+
+def weixinArticleShow(request, weixin_article_id):
+    weixinArticle = WeixinArticle.objects.get(pk=weixin_article_id)
+    return HttpResponse(weixinArticle.content)
 
 
 

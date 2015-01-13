@@ -107,14 +107,12 @@ class ScanResult(models.Model):
         ordering = ['scan']
         verbose_name='扫描结果' 
         verbose_name_plural='扫描结果'
-        
-        
-class WeixinScan(models.Model):
-    article_title_scan = models.ForeignKey(Job)
+   
+class WeixinInfo(models.Model):
     weixin_name = models.CharField(max_length=256, verbose_name='微信名')
     weixin_no = models.CharField(max_length=256, verbose_name='微信号')
     openid = models.CharField(max_length=256, verbose_name='微信openid')
-    create_date = models.DateTimeField(auto_now_add=True, verbose_name='创建日期')
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='创建日期')     
     
     def __unicode__(self):
         return self.weixin_name
@@ -123,5 +121,49 @@ class WeixinScan(models.Model):
         ordering = ['-create_date']
         verbose_name='微信列表' 
         verbose_name_plural='微信列表'
+        
+class WeixinArticleListScan(models.Model):
+    weixin_info = models.ForeignKey(WeixinInfo, verbose_name='微信号信息')
+    job = models.ForeignKey(Job, verbose_name='文章列表抓取')
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='创建日期')
+    
+    def __unicode__(self):
+        return str(self.weixin_info)
+    
+    class Meta:
+        ordering = ['-create_date']
+        verbose_name='文章列表' 
+        verbose_name_plural='文章列表'
+        
+class WeixinArticleContentScan(models.Model):
+    weixin_info = models.ForeignKey(WeixinInfo, verbose_name='微信号信息')
+    weixin_article_list_scan = models.ForeignKey(WeixinArticleListScan, verbose_name='文章列表抓取')
+    job = models.ForeignKey(Job, verbose_name='文章内容抓取')
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='创建日期')
+    
+    def __unicode__(self):
+        return str(self.weixin_info)
+    
+    class Meta:
+        ordering = ['-create_date']
+        verbose_name='文章内容' 
+        verbose_name_plural='文章内容'
+        
+class WeixinArticle(models.Model):
+    weixin_info = models.ForeignKey(WeixinInfo, verbose_name='微信号信息')
+    title = models.CharField(max_length=256, verbose_name='文章标题')
+    url = models.CharField(max_length=1024, verbose_name='文章源URL')
+    content = models.TextField(verbose_name='文章内容')
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='创建日期')
+    
+    def __unicode__(self):
+        return str(self.weixin_info)+": "+self.title
+    
+    class Meta:
+        ordering = ['-create_date']
+        verbose_name='微信文章' 
+        verbose_name_plural='微信文章'
+        
+        
     
     

@@ -16,7 +16,10 @@ urlpatterns = patterns('',
     url(r'^(?P<job_id>\d+)/$', views.detail, name='detail'),
     # ex: /polls/5/results/
     url(r'^(?P<job_id>\d+)/results/$', views.results, name='results'),
-    url(r'^run_weixin_scan/(?P<weixin_scan_id>\d+)/$', views.runWeixinScan, name='run_weixin_scan'),
+    url(r'^run_weixin_article_list_scan/(?P<weixin_scan_id>\d+)/$', views.runWeixinArticleListScan, name='run_weixin_article_list_scan'),
+    url(r'^run_weixin_article_content_scan/(?P<weixin_scan_id>\d+)/$', views.runWeixinArticleContentScan, name='run_weixin_article_content_scan'),
+    url(r'^test_weixin_article_show/$', views.testWeixinArticleShow, name='test_weixin_article_show'),
+    url(r'^weixin_article_show/(?P<weixin_article_id>\d+)/$', views.weixinArticleShow, name='weixin_article_show'),
     # ex: /polls/5/vote/
 #     url(r'^(?P<poll_id>\d+)/vote/$', views.vote, name='vote'),
 )

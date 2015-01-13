@@ -1302,3 +1302,47 @@ page_info_list.append({
 page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
 #end
 
+#近铁城市广场-文章内容		1	None
+#start
+
+page_info_list = []
+
+page_info_list.append({
+        "urls":['{{list_page}}',],
+        "regular_matchs":[{        
+	        "result":"nextPageUrl",
+	        "regulars":['([^;]*);',],
+	        "is_unique":"0",
+	        }, ],
+       "block_match":{
+       	   "start_str":'',
+	       "end_str":'',
+	       "result":"comblock"},
+       "loop_info":{
+       	   "is_need_loop":"0", 
+	       "loop_urls":["${nextPageUrl1}",], 
+	       "offset":"{{offset}}", 
+	       "limit":"{{limit}}", 
+	       "step":"{{step}}", },
+	   "encoding":"UTF-8",
+       "job_description":"近铁城市广场-文章内容"
+    })
+
+page_info_list.append({
+    "urls":['${nextPageUrl1}',],
+    "regular_matchs":[{        
+        "result":"title",
+        "regulars":['<title><\!\[CDATA\[([^]]*)\]\]><[^/]*/title><url><\!\[CDATA\[([^]]*)',],
+        "is_unique":"0",
+        },],
+   "loop_info":{
+       	   "is_need_loop":"0", 
+	       "loop_urls":[], },
+   "encoding":"UTF-8",
+   "job_description":"近铁城市广场-文章内容"
+})
+
+page_info_list.append({"is_end":"1","output_keys":["title1","title2",]})
+
+#end
+
